@@ -1,0 +1,612 @@
+{
+  "metadata": {
+    "name": "戦後日本復興建物データ",
+    "description": "1945-1970年の建物技術ツリー",
+    "version": "1.0.0"
+  },
+  "buildings": {
+    "barrack_house": {
+      "name_jp": "バラック住宅",
+      "name_en": "Barrack House",
+      "description_jp": "戦後の応急住宅。粗末だが短期間で建設可能",
+      "category": "residential",
+      "cost": 50,
+      "maintenance_cost": 2,
+      "size_width": 1,
+      "size_height": 1,
+      "unlock_condition": {
+        "year": 1945,
+        "population": 0,
+        "prerequisites": []
+      },
+      "stats": {
+        "population_capacity": 3,
+        "happiness_effect": -10,
+        "power_consumption": 0,
+        "water_consumption": 1
+      },
+      "sprite_name": "building_barrack",
+      "icon_name": "icon_barrack"
+    },
+    "wooden_house": {
+      "name_jp": "木造平屋",
+      "name_en": "Wooden House",
+      "description_jp": "伝統的な木造住宅。バラックより快適",
+      "category": "residential",
+      "cost": 200,
+      "maintenance_cost": 8,
+      "size_width": 1,
+      "size_height": 1,
+      "unlock_condition": {
+        "year": 1947,
+        "population": 50,
+        "prerequisites": ["barrack_house"]
+      },
+      "stats": {
+        "population_capacity": 5,
+        "happiness_effect": 5,
+        "power_consumption": 1,
+        "water_consumption": 2
+      },
+      "sprite_name": "building_wooden_house",
+      "icon_name": "icon_wooden_house"
+    },
+    "public_housing": {
+      "name_jp": "市営団地",
+      "name_en": "Public Housing",
+      "description_jp": "政府主導の集合住宅。多くの住民を収容",
+      "category": "residential",
+      "cost": 800,
+      "maintenance_cost": 25,
+      "size_width": 2,
+      "size_height": 2,
+      "unlock_condition": {
+        "year": 1950,
+        "population": 300,
+        "prerequisites": ["wooden_house"]
+      },
+      "stats": {
+        "population_capacity": 20,
+        "happiness_effect": 0,
+        "power_consumption": 5,
+        "water_consumption": 8
+      },
+      "sprite_name": "building_public_housing",
+      "icon_name": "icon_public_housing"
+    },
+    "apartment_building": {
+      "name_jp": "高層団地",
+      "name_en": "Apartment Building",
+      "description_jp": "高度成長期の近代的集合住宅",
+      "category": "residential",
+      "cost": 1500,
+      "maintenance_cost": 40,
+      "size_width": 2,
+      "size_height": 2,
+      "unlock_condition": {
+        "year": 1955,
+        "population": 800,
+        "prerequisites": ["public_housing", "concrete_tech"]
+      },
+      "stats": {
+        "population_capacity": 35,
+        "happiness_effect": 10,
+        "power_consumption": 10,
+        "water_consumption": 15
+      },
+      "sprite_name": "building_apartment",
+      "icon_name": "icon_apartment"
+    },
+    "small_shop": {
+      "name_jp": "個人商店",
+      "name_en": "Small Shop",
+      "description_jp": "戦後復興期の小規模商店",
+      "category": "commercial",
+      "cost": 150,
+      "maintenance_cost": 12,
+      "size_width": 1,
+      "size_height": 1,
+      "unlock_condition": {
+        "year": 1945,
+        "population": 10,
+        "prerequisites": []
+      },
+      "stats": {
+        "jobs_provided": 3,
+        "happiness_effect": 5,
+        "power_consumption": 2,
+        "water_consumption": 1
+      },
+      "sprite_name": "building_small_shop",
+      "icon_name": "icon_small_shop"
+    },
+    "market_street": {
+      "name_jp": "商店街",
+      "name_en": "Market Street",
+      "description_jp": "活気あふれる商店街。多くの雇用を創出",
+      "category": "commercial",
+      "cost": 600,
+      "maintenance_cost": 30,
+      "size_width": 2,
+      "size_height": 1,
+      "unlock_condition": {
+        "year": 1948,
+        "population": 200,
+        "prerequisites": ["small_shop"]
+      },
+      "stats": {
+        "jobs_provided": 12,
+        "happiness_effect": 15,
+        "power_consumption": 8,
+        "water_consumption": 4
+      },
+      "sprite_name": "building_market_street",
+      "icon_name": "icon_market_street"
+    },
+    "department_store": {
+      "name_jp": "百貨店",
+      "name_en": "Department Store",
+      "description_jp": "高度成長期の大型商業施設",
+      "category": "commercial",
+      "cost": 2000,
+      "maintenance_cost": 60,
+      "size_width": 2,
+      "size_height": 2,
+      "unlock_condition": {
+        "year": 1955,
+        "population": 1000,
+        "prerequisites": ["market_street"]
+      },
+      "stats": {
+        "jobs_provided": 25,
+        "happiness_effect": 25,
+        "power_consumption": 15,
+        "water_consumption": 8
+      },
+      "sprite_name": "building_department_store",
+      "icon_name": "icon_department_store"
+    },
+    "small_factory": {
+      "name_jp": "小工場",
+      "name_en": "Small Factory",
+      "description_jp": "戦後復興を支える小規模工場",
+      "category": "industrial",
+      "cost": 400,
+      "maintenance_cost": 25,
+      "size_width": 1,
+      "size_height": 1,
+      "unlock_condition": {
+        "year": 1945,
+        "population": 20,
+        "prerequisites": []
+      },
+      "stats": {
+        "jobs_provided": 8,
+        "happiness_effect": -5,
+        "power_consumption": 8,
+        "water_consumption": 3,
+        "pollution": 5
+      },
+      "sprite_name": "building_small_factory",
+      "icon_name": "icon_small_factory"
+    },
+    "textile_factory": {
+      "name_jp": "繊維工場",
+      "name_en": "Textile Factory",
+      "description_jp": "朝鮮戦争特需で活況を呈する繊維工場",
+      "category": "industrial",
+      "cost": 800,
+      "maintenance_cost": 40,
+      "size_width": 2,
+      "size_height": 1,
+      "unlock_condition": {
+        "year": 1950,
+        "population": 100,
+        "prerequisites": ["small_factory"]
+      },
+      "stats": {
+        "jobs_provided": 20,
+        "happiness_effect": 0,
+        "power_consumption": 15,
+        "water_consumption": 8,
+        "pollution": 8
+      },
+      "sprite_name": "building_textile_factory",
+      "icon_name": "icon_textile_factory"
+    },
+    "steel_mill": {
+      "name_jp": "製鉄所",
+      "name_en": "Steel Mill",
+      "description_jp": "高度成長期の基幹産業",
+      "category": "industrial",
+      "cost": 3000,
+      "maintenance_cost": 80,
+      "size_width": 3,
+      "size_height": 2,
+      "unlock_condition": {
+        "year": 1955,
+        "population": 500,
+        "prerequisites": ["textile_factory", "coal_power_plant"]
+      },
+      "stats": {
+        "jobs_provided": 40,
+        "happiness_effect": -10,
+        "power_consumption": 50,
+        "water_consumption": 20,
+        "pollution": 25
+      },
+      "sprite_name": "building_steel_mill",
+      "icon_name": "icon_steel_mill"
+    },
+    "auto_factory": {
+      "name_jp": "自動車工場",
+      "name_en": "Auto Factory",
+      "description_jp": "モータリゼーションの象徴",
+      "category": "industrial",
+      "cost": 5000,
+      "maintenance_cost": 100,
+      "size_width": 3,
+      "size_height": 2,
+      "unlock_condition": {
+        "year": 1960,
+        "population": 1500,
+        "prerequisites": ["steel_mill"]
+      },
+      "stats": {
+        "jobs_provided": 60,
+        "happiness_effect": 5,
+        "power_consumption": 40,
+        "water_consumption": 15,
+        "pollution": 15
+      },
+      "sprite_name": "building_auto_factory",
+      "icon_name": "icon_auto_factory"
+    },
+    "police_box": {
+      "name_jp": "派出所",
+      "name_en": "Police Box",
+      "description_jp": "地域の治安を守る小さな派出所",
+      "category": "civic",
+      "cost": 200,
+      "maintenance_cost": 15,
+      "size_width": 1,
+      "size_height": 1,
+      "unlock_condition": {
+        "year": 1945,
+        "population": 50,
+        "prerequisites": []
+      },
+      "stats": {
+        "jobs_provided": 3,
+        "happiness_effect": 10,
+        "power_consumption": 1,
+        "water_consumption": 1
+      },
+      "sprite_name": "building_police_box",
+      "icon_name": "icon_police_box"
+    },
+    "fire_station": {
+      "name_jp": "消防分団",
+      "name_en": "Fire Station",
+      "description_jp": "火災から街を守る消防分団",
+      "category": "civic",
+      "cost": 500,
+      "maintenance_cost": 25,
+      "size_width": 2,
+      "size_height": 1,
+      "unlock_condition": {
+        "year": 1947,
+        "population": 150,
+        "prerequisites": ["police_box"]
+      },
+      "stats": {
+        "jobs_provided": 8,
+        "happiness_effect": 15,
+        "power_consumption": 3,
+        "water_consumption": 2
+      },
+      "sprite_name": "building_fire_station",
+      "icon_name": "icon_fire_station"
+    },
+    "elementary_school": {
+      "name_jp": "小学校",
+      "name_en": "Elementary School",
+      "description_jp": "戦後教育の基盤となる小学校",
+      "category": "civic",
+      "cost": 800,
+      "maintenance_cost": 40,
+      "size_width": 2,
+      "size_height": 2,
+      "unlock_condition": {
+        "year": 1947,
+        "population": 200,
+        "prerequisites": ["wooden_house"]
+      },
+      "stats": {
+        "jobs_provided": 10,
+        "happiness_effect": 20,
+        "power_consumption": 5,
+        "water_consumption": 3
+      },
+      "sprite_name": "building_elementary_school",
+      "icon_name": "icon_elementary_school"
+    },
+    "clinic": {
+      "name_jp": "診療所",
+      "name_en": "Clinic",
+      "description_jp": "地域医療を支える小さな診療所",
+      "category": "civic",
+      "cost": 600,
+      "maintenance_cost": 30,
+      "size_width": 1,
+      "size_height": 1,
+      "unlock_condition": {
+        "year": 1948,
+        "population": 100,
+        "prerequisites": ["police_box"]
+      },
+      "stats": {
+        "jobs_provided": 5,
+        "happiness_effect": 15,
+        "power_consumption": 3,
+        "water_consumption": 2
+      },
+      "sprite_name": "building_clinic",
+      "icon_name": "icon_clinic"
+    },
+    "hospital": {
+      "name_jp": "総合病院",
+      "name_en": "General Hospital",
+      "description_jp": "高度医療を提供する総合病院",
+      "category": "civic",
+      "cost": 2500,
+      "maintenance_cost": 80,
+      "size_width": 3,
+      "size_height": 2,
+      "unlock_condition": {
+        "year": 1955,
+        "population": 800,
+        "prerequisites": ["clinic", "concrete_tech"]
+      },
+      "stats": {
+        "jobs_provided": 25,
+        "happiness_effect": 30,
+        "power_consumption": 20,
+        "water_consumption": 10
+      },
+      "sprite_name": "building_hospital",
+      "icon_name": "icon_hospital"
+    },
+    "road": {
+      "name_jp": "道路",
+      "name_en": "Road",
+      "description_jp": "都市の基盤となる道路",
+      "category": "infra",
+      "cost": 10,
+      "maintenance_cost": 1,
+      "size_width": 1,
+      "size_height": 1,
+      "unlock_condition": {
+        "year": 1945,
+        "population": 0,
+        "prerequisites": []
+      },
+      "stats": {
+        "happiness_effect": 2,
+        "power_consumption": 0,
+        "water_consumption": 0
+      },
+      "sprite_name": "terrain_road",
+      "icon_name": "icon_road"
+    },
+    "train_station": {
+      "name_jp": "国鉄駅",
+      "name_en": "Train Station",
+      "description_jp": "国鉄の駅。交通の要所",
+      "category": "infra",
+      "cost": 1200,
+      "maintenance_cost": 50,
+      "size_width": 2,
+      "size_height": 2,
+      "unlock_condition": {
+        "year": 1950,
+        "population": 400,
+        "prerequisites": ["road"]
+      },
+      "stats": {
+        "jobs_provided": 15,
+        "happiness_effect": 25,
+        "power_consumption": 10,
+        "water_consumption": 5
+      },
+      "sprite_name": "building_train_station",
+      "icon_name": "icon_train_station"
+    },
+    "coal_power_plant": {
+      "name_jp": "火力発電所",
+      "name_en": "Coal Power Plant",
+      "description_jp": "石炭を燃やして電力を供給",
+      "category": "infra",
+      "cost": 2000,
+      "maintenance_cost": 60,
+      "size_width": 2,
+      "size_height": 2,
+      "unlock_condition": {
+        "year": 1950,
+        "population": 300,
+        "prerequisites": ["small_factory"]
+      },
+      "stats": {
+        "jobs_provided": 20,
+        "happiness_effect": -15,
+        "power_production": 100,
+        "water_consumption": 10,
+        "pollution": 20
+      },
+      "sprite_name": "building_coal_power_plant",
+      "icon_name": "icon_coal_power_plant"
+    },
+    "water_plant": {
+      "name_jp": "浄水場",
+      "name_en": "Water Plant",
+      "description_jp": "清潔な水を市民に供給",
+      "category": "infra",
+      "cost": 1500,
+      "maintenance_cost": 40,
+      "size_width": 2,
+      "size_height": 2,
+      "unlock_condition": {
+        "year": 1952,
+        "population": 500,
+        "prerequisites": ["coal_power_plant"]
+      },
+      "stats": {
+        "jobs_provided": 15,
+        "happiness_effect": 20,
+        "power_consumption": 20,
+        "water_production": 100
+      },
+      "sprite_name": "building_water_plant",
+      "icon_name": "icon_water_plant"
+    },
+    "nuclear_power_plant": {
+      "name_jp": "原子力発電所",
+      "name_en": "Nuclear Power Plant",
+      "description_jp": "原子力の平和利用。大量の電力を供給",
+      "category": "infra",
+      "cost": 8000,
+      "maintenance_cost": 150,
+      "size_width": 3,
+      "size_height": 3,
+      "unlock_condition": {
+        "year": 1965,
+        "population": 2000,
+        "prerequisites": ["coal_power_plant", "hospital"]
+      },
+      "stats": {
+        "jobs_provided": 30,
+        "happiness_effect": -10,
+        "power_production": 300,
+        "water_consumption": 30,
+        "pollution": 5
+      },
+      "sprite_name": "building_nuclear_power_plant",
+      "icon_name": "icon_nuclear_power_plant"
+    },
+    "bathhouse": {
+      "name_jp": "銭湯",
+      "name_en": "Bathhouse",
+      "description_jp": "庶民の憩いの場。地域コミュニティの中心",
+      "category": "recreation",
+      "cost": 300,
+      "maintenance_cost": 20,
+      "size_width": 1,
+      "size_height": 1,
+      "unlock_condition": {
+        "year": 1946,
+        "population": 80,
+        "prerequisites": ["wooden_house"]
+      },
+      "stats": {
+        "jobs_provided": 3,
+        "happiness_effect": 15,
+        "power_consumption": 5,
+        "water_consumption": 8
+      },
+      "sprite_name": "building_bathhouse",
+      "icon_name": "icon_bathhouse"
+    },
+    "movie_theater": {
+      "name_jp": "映画館",
+      "name_en": "Movie Theater",
+      "description_jp": "娯楽の殿堂。映画黄金時代の象徴",
+      "category": "recreation",
+      "cost": 1000,
+      "maintenance_cost": 50,
+      "size_width": 2,
+      "size_height": 2,
+      "unlock_condition": {
+        "year": 1952,
+        "population": 600,
+        "prerequisites": ["market_street"]
+      },
+      "stats": {
+        "jobs_provided": 12,
+        "happiness_effect": 25,
+        "power_consumption": 15,
+        "water_consumption": 3
+      },
+      "sprite_name": "building_movie_theater",
+      "icon_name": "icon_movie_theater"
+    },
+    "tv_tower": {
+      "name_jp": "テレビ塔",
+      "name_en": "TV Tower",
+      "description_jp": "テレビ放送の電波塔。新時代の象徴",
+      "category": "special",
+      "cost": 5000,
+      "maintenance_cost": 100,
+      "size_width": 1,
+      "size_height": 1,
+      "unlock_condition": {
+        "year": 1958,
+        "population": 1200,
+        "prerequisites": ["coal_power_plant", "department_store"]
+      },
+      "stats": {
+        "jobs_provided": 20,
+        "happiness_effect": 40,
+        "power_consumption": 30,
+        "water_consumption": 2
+      },
+      "sprite_name": "building_tv_tower",
+      "icon_name": "icon_tv_tower"
+    },
+    "airport": {
+      "name_jp": "空港",
+      "name_en": "Airport",
+      "description_jp": "国際化の玄関口。空の時代の到来",
+      "category": "special",
+      "cost": 12000,
+      "maintenance_cost": 200,
+      "size_width": 4,
+      "size_height": 3,
+      "unlock_condition": {
+        "year": 1964,
+        "population": 3000,
+        "prerequisites": ["auto_factory", "tv_tower"]
+      },
+      "stats": {
+        "jobs_provided": 80,
+        "happiness_effect": 50,
+        "power_consumption": 50,
+        "water_consumption": 20
+      },
+      "sprite_name": "building_airport",
+      "icon_name": "icon_airport"
+    },
+    "concrete_tech": {
+      "name_jp": "鉄筋コンクリート技術",
+      "name_en": "Concrete Technology",
+      "description_jp": "近代建築の基盤技術（研究施設）",
+      "category": "special",
+      "cost": 1500,
+      "maintenance_cost": 60,
+      "size_width": 2,
+      "size_height": 1,
+      "unlock_condition": {
+        "year": 1950,
+        "population": 200,
+        "prerequisites": ["small_factory"]
+      },
+      "stats": {
+        "jobs_provided": 10,
+        "happiness_effect": 5,
+        "power_consumption": 10,
+        "water_consumption": 2
+      },
+      "sprite_name": "building_concrete_tech",
+      "icon_name": "icon_concrete_tech"
+    }
+  }
+}
