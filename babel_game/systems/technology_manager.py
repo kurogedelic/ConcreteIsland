@@ -3,7 +3,7 @@
 Technology Progression Management System
 """
 
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any
 from dataclasses import dataclass
 from enum import Enum
 from core.event_manager import event_manager

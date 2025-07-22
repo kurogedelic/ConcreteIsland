@@ -27,6 +27,12 @@ class UIManager:
         self.show_completion_screen = False
         self.completion_stats = None
         self.show_help_screen = False
+        self.show_terrain_generator = False
+        
+        # 地形生成UI状態
+        self.terrain_map_type = "coastal"
+        self.terrain_seed = ""
+        self.terrain_editing_seed = False
         
         # シムシティ風パレット
         self.selected_category = "residential"  # 選択中のカテゴリ
@@ -79,6 +85,14 @@ class UIManager:
         if pyxel.btnp(pyxel.KEY_F2):
             self.show_help_screen = not self.show_help_screen
         
+        # 地形生成画面切り替え（F3キー）
+        if pyxel.btnp(pyxel.KEY_F3):
+            self.show_terrain_generator = not self.show_terrain_generator
+            
+        # 地形生成UI操作
+        if self.show_terrain_generator:
+            self._handle_terrain_generator_input()
+        
         # 建物選択（現在のカテゴリ内）- グリッドナビゲーション対応
         current_buildings = self.building_categories[self.selected_category]["buildings"]
         if len(current_buildings) > 0:
@@ -118,6 +132,11 @@ class UIManager:
         # ヘルプ画面
         if self.show_help_screen:
             self.draw_help_screen()
+            return
+        
+        # 地形生成画面
+        if self.show_terrain_generator:
+            self.draw_terrain_generator()
             return
         
         # ステータスバー
@@ -620,7 +639,8 @@ class UIManager:
             ("その他", [
                 "F1: デバッグ情報表示",
                 "F2: このヘルプ画面",
-                "F5/F6/F7: 難易度変更（イージー/ノーマル/ハード）",
+                "F3: 地形生成画面",
+                "F5/F6/F7: 難易度変更",
                 "Q: ゲーム終了"
             ])
         ]
@@ -647,3 +667,149 @@ class UIManager:
         # 閉じる説明
         font_manager.draw_text(panel_x + panel_width // 2 - 60, panel_y + panel_height - 40, 
                              "F2キーで閉じる", self.text_color)
+    
+    def _handle_terrain_generator_input(self):
+        """地形生成画面の入力処理"""
+        from core.event_manager import event_manager
+        
+        # 地形タイプ選択（1-5キー）
+        terrain_types = ["island", "coastal", "inland", "peninsula", "river_valley"]
+        for i, terrain_type in enumerate(terrain_types):
+            if pyxel.btnp(pyxel.KEY_1 + i):
+                self.terrain_map_type = terrain_type
+        
+        # シード値編集モード切り替え（Sキー）
+        if pyxel.btnp(pyxel.KEY_S):
+            self.terrain_editing_seed = not self.terrain_editing_seed
+            if not self.terrain_editing_seed:
+                # 編集終了時に数値チェック
+                try:
+                    if self.terrain_seed:
+                        int(self.terrain_seed)
+                except ValueError:
+                    self.terrain_seed = ""
+        
+        # シード値編集中の文字入力
+        if self.terrain_editing_seed:
+            # 数字キー入力
+            for i in range(10):
+                if pyxel.btnp(pyxel.KEY_0 + i):
+                    if len(self.terrain_seed) < 10:  # 最大10桁
+                        self.terrain_seed += str(i)
+            
+            # バックスペース
+            if pyxel.btnp(pyxel.KEY_BACKSPACE):
+                if self.terrain_seed:
+                    self.terrain_seed = self.terrain_seed[:-1]
+        
+        # 地形生成実行（Enterキー）
+        if pyxel.btnp(pyxel.KEY_RETURN):
+            seed = None
+            if self.terrain_seed:
+                try:
+                    seed = int(self.terrain_seed)
+                except ValueError:
+                    seed = None
+            
+            # 地形生成イベントを発火
+            event_manager.emit_event("developer_generate_terrain", {
+                "map_type": self.terrain_map_type,
+                "seed": seed
+            })
+            
+            # 画面を閉じる
+            self.show_terrain_generator = False
+        
+        # ランダムシード生成（Rキー）
+        if pyxel.btnp(pyxel.KEY_R):
+            import random
+            self.terrain_seed = str(random.randint(1, 999999))
+    
+    def draw_terrain_generator(self):
+        """地形生成画面を描画"""
+        # 背景を暗くする
+        pyxel.rect(0, 0, GameConfig.SCREEN_WIDTH, GameConfig.SCREEN_HEIGHT, 0)
+        
+        # パネル設定
+        panel_width = 500
+        panel_height = 400
+        panel_x = (GameConfig.SCREEN_WIDTH - panel_width) // 2
+        panel_y = (GameConfig.SCREEN_HEIGHT - panel_height) // 2
+        
+        # パネル背景
+        pyxel.rect(panel_x, panel_y, panel_width, panel_height, self.bg_color)
+        pyxel.rectb(panel_x, panel_y, panel_width, panel_height, self.border_color)
+        
+        # タイトル
+        title = "地形生成"
+        font_manager.draw_text(panel_x + panel_width // 2 - 30, panel_y + 20, title, self.text_color)
+        
+        y_offset = panel_y + 60
+        line_height = 25
+        
+        # 地形タイプ選択
+        font_manager.draw_text(panel_x + 30, y_offset, "地形タイプ:", self.text_color)
+        y_offset += line_height
+        
+        terrain_types = [
+            ("island", "島", "1"),
+            ("coastal", "海岸", "2"),
+            ("inland", "内陸", "3"),
+            ("peninsula", "半島", "4"),
+            ("river_valley", "河川流域", "5")
+        ]
+        
+        for terrain_type, name_jp, key in terrain_types:
+            color = self.highlight_color if terrain_type == self.terrain_map_type else self.text_color
+            text = f"[{key}] {name_jp}"
+            if terrain_type == self.terrain_map_type:
+                text = f"► {text}"
+            font_manager.draw_text(panel_x + 50, y_offset, text, color)
+            y_offset += 20
+        
+        y_offset += 10
+        
+        # シード値設定
+        font_manager.draw_text(panel_x + 30, y_offset, "シード値:", self.text_color)
+        y_offset += line_height
+        
+        # シード入力欄
+        seed_box_x = panel_x + 50
+        seed_box_y = y_offset - 5
+        seed_box_width = 200
+        seed_box_height = 20
+        
+        # 入力欄の背景
+        input_bg_color = 1 if self.terrain_editing_seed else 5
+        pyxel.rect(seed_box_x, seed_box_y, seed_box_width, seed_box_height, input_bg_color)
+        pyxel.rectb(seed_box_x, seed_box_y, seed_box_width, seed_box_height, self.border_color)
+        
+        # シード値表示
+        display_seed = self.terrain_seed if self.terrain_seed else "ランダム"
+        if self.terrain_editing_seed and len(self.terrain_seed) < 10:
+            display_seed += "_"  # カーソル表示
+        
+        font_manager.draw_text(seed_box_x + 5, seed_box_y + 5, display_seed, self.text_color)
+        
+        y_offset += 35
+        
+        # シード編集説明
+        edit_text = "[S] シード編集" if not self.terrain_editing_seed else "[S] 編集終了"
+        font_manager.draw_text(panel_x + 50, y_offset, edit_text, self.text_color)
+        y_offset += 20
+        
+        font_manager.draw_text(panel_x + 50, y_offset, "[R] ランダム生成", self.text_color)
+        y_offset += 30
+        
+        # 操作説明
+        font_manager.draw_text(panel_x + 30, y_offset, "操作:", self.highlight_color)
+        y_offset += 20
+        
+        font_manager.draw_text(panel_x + 50, y_offset, "[Enter] 地形生成実行", self.text_color)
+        y_offset += 20
+        
+        font_manager.draw_text(panel_x + 50, y_offset, "[F3] キャンセル", self.text_color)
+        
+        # 注意事項
+        y_offset += 30
+        font_manager.draw_text(panel_x + 30, y_offset, "※現在の地形は失われます", 8)  # 警告色
