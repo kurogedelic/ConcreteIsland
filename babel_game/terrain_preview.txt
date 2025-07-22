@@ -1,0 +1,36 @@
+Terrain Preview
+========================================
+Legend: ~ Water, . Sand, (space) Grass, ♠ Forest, ^ Mountain, X Wasteland
+========================================
+.~~~~~.~.~~~~X~~~~~~~~~~~~.~~~.~
+~~~~X.~~~~..~X~~~~~~~XX~~~~~~~~~
+X..X.XXXX.....XXXXXXXXXXX......X
+.~X.X XX       XXXXXXXXX  ...   
+~.~.           XXX  XXXX   X    
+~..XX           X   XXXX        
+..XXX     XXX XX    XXXX     XX 
+  XX      XXXXXX     XXX    XXXX
+.XX.       XXXXXX    XX.   XXXXX
+~.~.        XXXXXXX       XXXXX 
+.~..         XXXXXXX      XXXXX 
+~~.          XXXXXXXX      XXXXX
+.~.XX        XXXXXXXX       XX..
+~~~XX         XXXXXX          ..
+.~~.           ♠XXXX          ..
+~~~.            XXXXX          .
+~~~.             XXXX           
+~~~.             XXXX      XXX  
+.~~.          XXXXXXX       XXX 
+.~~.        XXXXXXXXX       XXX 
+X.~.        XXXXXXXXXX      XXX 
+~..X       XXXXXXXX  X.   XXXXXX
+..~.XX     XXXXXXXX  ....XXXXXX 
+~...XXX    XXXXXXX   ....XXXXX  
+X~~.XXXX  XXXXXXXXX  ....  XXX  
+~~~XXXXXXXXXXXXXXXX  ....   XX  
+.~~XXXXXXXXX  XXXXXXX....   XX  
+~~~XX..XXXXX XXXXXXX.....  XXX  
+~~~....XXXX ..XXXXXX .....XXXXX 
+.~~~XXXXXXX....XXXX........XXXXX
+~~~~~~~~~~~~~~~~X~.~~~~~~~~~X~XX
+~~~~~~~~~~~~X.~X~~.~~~~~.~..~.X~

@@ -9,6 +9,7 @@ from config.game_config import GameConfig
 from systems.coastline_generator import CoastlineGenerator
 from systems.animation_manager import animation_manager
 from systems.viewport_culling import ViewportCulling
+from systems.terrain_generator import terrain_generator, TerrainGenConfig, MapType
 
 
 class GridSystem:
@@ -231,6 +232,61 @@ class GridSystem:
             3: GameConfig.COLOR_ROAD    # 道路
         }
         return terrain_colors.get(terrain_type, GameConfig.COLOR_GRASS)
+    
+    def generate_procedural_terrain(self, map_type: MapType = MapType.COASTAL, seed: int = None):
+        """手続き的地形生成"""
+        print(f"Generating procedural terrain: {map_type.value}")
+        
+        config = TerrainGenConfig()
+        config.map_type = map_type
+        config.seed = seed
+        
+        # 戦後復興らしい設定に調整
+        config.wasteland_probability = 0.20  # 戦災荒廃地を多めに
+        config.base_frequency = 0.06  # より細かい地形
+        config.smoothing_passes = 3   # より滑らかに
+        
+        # 地形生成
+        generated_terrain = terrain_generator.generate_terrain(config)
+        
+        # 既存の地形配列にコピー（既存のフォーマットに合わせて変換）
+        for y in range(min(self.grid_height, len(generated_terrain))):
+            for x in range(min(self.grid_width, len(generated_terrain[0]))):
+                # 新しい地形タイプを既存の形式にマッピング
+                new_terrain_type = generated_terrain[y][x]
+                if new_terrain_type == 0:  # WATER
+                    self.terrain[y][x] = 2
+                elif new_terrain_type == 1:  # SAND  
+                    self.terrain[y][x] = 1
+                elif new_terrain_type == 2:  # GRASS
+                    self.terrain[y][x] = 0
+                elif new_terrain_type == 3:  # FOREST
+                    self.terrain[y][x] = 0  # 森林も草地として扱う
+                elif new_terrain_type == 4:  # MOUNTAIN
+                    self.terrain[y][x] = 1  # 山地は土地として扱う
+                elif new_terrain_type == 5:  # WASTELAND
+                    self.terrain[y][x] = 1  # 荒廃地は土地として扱う
+                else:
+                    self.terrain[y][x] = 0  # デフォルトは草地
+        
+        # 海岸線生成（既存システムを活用）
+        self.coastline_generator.generate_coastlines(self.terrain, self.grid_width, self.grid_height)
+        
+        # 水タイルのアニメーション設定
+        self._setup_water_animations()
+        
+        # 地形情報を取得・表示
+        terrain_info = terrain_generator.get_terrain_info(generated_terrain)
+        print(f"Terrain generated: {terrain_info['map_type']}, seed: {terrain_info['seed']}")
+        for terrain_name, data in terrain_info['terrain_distribution'].items():
+            print(f"  {terrain_name}: {data['percentage']:.1f}%")
+    
+    def _setup_water_animations(self):
+        """水タイルのアニメーション設定"""
+        for y in range(self.grid_height):
+            for x in range(self.grid_width):
+                if self.terrain[y][x] == 2:  # 水タイル
+                    animation_manager.set_tile_animation(x, y, "water")
     
     def _generate_test_terrain(self):
         """テスト用地形を生成"""

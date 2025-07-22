@@ -81,6 +81,7 @@ class DeveloperMode:
             DevCommand("invincible", "建物無敵化", self.toggle_invincible),
             DevCommand("save <name>", "ゲーム保存", self.save_game),
             DevCommand("load <filename>", "ゲーム読み込み", self.load_game),
+            DevCommand("terrain <type> [seed]", "地形生成", self.generate_terrain),
             DevCommand("help", "コマンド一覧", self.show_help)
         ]
     
@@ -218,6 +219,15 @@ class DeveloperMode:
             except Exception as e:
                 self.log(f"ロードエラー: {str(e)}")
                 return False
+        elif cmd == "terrain" and args:
+            try:
+                map_type = args[0]
+                seed = int(args[1]) if len(args) > 1 else None
+                self.generate_terrain(map_type, seed)
+                return True
+            except Exception as e:
+                self.log(f"地形生成エラー: {str(e)}")
+                return False
         elif cmd == "help":
             self.show_help()
             return True
@@ -315,12 +325,37 @@ class DeveloperMode:
         event_manager.emit_event("developer_load_game", {"filename": filename})
         self.log(f"ロード要求: {filename}")
     
+    def generate_terrain(self, map_type: str, seed: int = None):
+        """地形生成"""
+        from systems.terrain_generator import MapType
+        from core.event_manager import event_manager
+        
+        # マップタイプを検証
+        valid_types = [t.value for t in MapType]
+        if map_type not in valid_types:
+            self.log(f"無効な地形タイプ: {map_type}")
+            self.log(f"有効なタイプ: {', '.join(valid_types)}")
+            return
+        
+        # イベント経由で地形生成要求
+        event_manager.emit_event("developer_generate_terrain", {
+            "map_type": map_type,
+            "seed": seed
+        })
+        
+        seed_text = f" (seed: {seed})" if seed else ""
+        self.log(f"地形生成要求: {map_type}{seed_text}")
+    
     def show_help(self):
         """ヘルプ表示"""
         self.log("=== 開発者コマンド一覧 ===")
         for cmd in self.console_commands:
             if cmd.enabled:
                 self.log(f"{cmd.command}: {cmd.description}")
+        
+        # 地形タイプのヘルプも表示
+        self.log("")
+        self.log("地形タイプ: island, coastal, inland, peninsula, river_valley")
     
     def draw_dev_overlay(self, game_state: Dict[str, Any]):
         """開発者オーバーレイを描画"""

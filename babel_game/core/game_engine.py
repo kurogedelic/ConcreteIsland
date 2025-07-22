@@ -62,6 +62,7 @@ class GameEngine:
         event_manager.register_listener("game_completed", self._on_game_completed)
         event_manager.register_listener("developer_save_game", self._on_developer_save)
         event_manager.register_listener("developer_load_game", self._on_developer_load)
+        event_manager.register_listener("developer_generate_terrain", self._on_developer_generate_terrain)
     
     def _initialize_systems(self):
         """各システムを初期化"""
@@ -417,6 +418,23 @@ class GameEngine:
             developer_mode.log(f"ロード完了: {filename}")
         else:
             developer_mode.log(f"ロード失敗: {save_manager.last_load_error}")
+    
+    def _on_developer_generate_terrain(self, data):
+        """開発者地形生成イベントハンドラ"""
+        from systems.terrain_generator import MapType
+        
+        map_type_str = data.get("map_type", "coastal")
+        seed = data.get("seed")
+        
+        # マップタイプ変換
+        map_type = MapType(map_type_str)
+        
+        # 地形生成実行
+        self.grid_system.generate_procedural_terrain(map_type, seed)
+        
+        developer_mode.log(f"地形生成完了: {map_type_str}")
+        if seed:
+            developer_mode.log(f"使用シード: {seed}")
     
     def shutdown(self):
         """ゲーム終了処理"""
