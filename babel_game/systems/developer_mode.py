@@ -79,6 +79,8 @@ class DeveloperMode:
             DevCommand("stats", "統計表示切り替え", self.toggle_stats),
             DevCommand("noevent", "イベント無効化", self.toggle_no_events),
             DevCommand("invincible", "建物無敵化", self.toggle_invincible),
+            DevCommand("save <name>", "ゲーム保存", self.save_game),
+            DevCommand("load <filename>", "ゲーム読み込み", self.load_game),
             DevCommand("help", "コマンド一覧", self.show_help)
         ]
     
@@ -200,6 +202,22 @@ class DeveloperMode:
         elif cmd == "stats":
             self.toggle_stats()
             return True
+        elif cmd == "save" and args:
+            try:
+                save_name = args[0]
+                self.save_game(save_name)
+                return True
+            except Exception as e:
+                self.log(f"セーブエラー: {str(e)}")
+                return False
+        elif cmd == "load" and args:
+            try:
+                filename = args[0]
+                self.load_game(filename)
+                return True
+            except Exception as e:
+                self.log(f"ロードエラー: {str(e)}")
+                return False
         elif cmd == "help":
             self.show_help()
             return True
@@ -276,6 +294,26 @@ class DeveloperMode:
         self.invincible_buildings = not self.invincible_buildings
         event_manager.emit_event("developer_invincible_buildings", {"enabled": self.invincible_buildings})
         self.log(f"建物無敵化: {'有効' if self.invincible_buildings else '無効'}")
+    
+    def save_game(self, save_name: str):
+        """ゲーム保存"""
+        from systems.save_manager import save_manager
+        from core.event_manager import event_manager
+        
+        # GameEngineインスタンスを取得する方法が必要
+        # イベント経由で処理
+        event_manager.emit_event("developer_save_game", {"save_name": save_name})
+        self.log(f"セーブ要求: {save_name}")
+    
+    def load_game(self, filename: str):
+        """ゲーム読み込み"""
+        from systems.save_manager import save_manager
+        from core.event_manager import event_manager
+        
+        # GameEngineインスタンスを取得する方法が必要
+        # イベント経由で処理
+        event_manager.emit_event("developer_load_game", {"filename": filename})
+        self.log(f"ロード要求: {filename}")
     
     def show_help(self):
         """ヘルプ表示"""

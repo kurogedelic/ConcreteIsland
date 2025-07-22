@@ -484,3 +484,42 @@ class TechnologyManager:
         if building.definition.id in ["concrete_tech", "steel_mill", "nuclear_power_plant"]:
             for tech_field in self.research_progress:
                 self.research_progress[tech_field] += 5
+    
+    def _restore_from_save_data(self, tech_data: Dict[str, Any]):
+        """セーブデータから技術システムを復元"""
+        try:
+            # 現在の時代を復元
+            if 'current_era' in tech_data:
+                era_value = tech_data['current_era']
+                for era in TechnologyEra:
+                    if era.value == era_value:
+                        self.current_era = era
+                        break
+            
+            # アンロック済み建物リストを復元
+            if 'unlocked_buildings' in tech_data:
+                self.unlocked_buildings = set(tech_data['unlocked_buildings'])
+            
+            # 研究進捗を復元
+            if 'research_progress' in tech_data:
+                saved_progress = tech_data['research_progress']
+                for field, progress in saved_progress.items():
+                    if field in self.research_progress:
+                        self.research_progress[field] = progress
+            
+            # 完了済み時代を復元
+            if 'completed_eras' in tech_data:
+                self.completed_eras = set()
+                for era_value in tech_data['completed_eras']:
+                    for era in TechnologyEra:
+                        if era.value == era_value:
+                            self.completed_eras.add(era)
+                            break
+            
+            # 現在の時代に合わせて時代設定を更新
+            self._update_current_period()
+            
+            print(f"Technology system restored: Era {self.current_era.value}, {len(self.unlocked_buildings)} buildings unlocked")
+            
+        except Exception as e:
+            print(f"Error restoring technology system: {e}")

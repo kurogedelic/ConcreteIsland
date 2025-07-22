@@ -706,5 +706,35 @@ class EventSystem:
             self.event_probabilities["major_earthquake"] = 0.03
         elif new_population > 1000:
             self.event_probabilities["major_earthquake"] = 0.02
-        else:
-            self.event_probabilities["major_earthquake"] = 0.01
+    
+    def _restore_from_save_data(self, events_data: Dict[str, Any]):
+        """セーブデータからイベントシステムを復元"""
+        try:
+            # 災害履歴を復元
+            if 'disaster_history' in events_data:
+                self.disaster_history.clear()
+                for disaster_data in events_data['disaster_history']:
+                    disaster = DisasterEvent(
+                        disaster_type=disaster_data['type'],
+                        year=disaster_data['year'],
+                        affected_area=disaster_data['affected_area'],
+                        damage_amount=disaster_data['damage']
+                    )
+                    self.disaster_history.append(disaster)
+            
+            # 現在の季節を復元
+            if 'current_season' in events_data:
+                season_value = events_data['current_season']
+                for season in Season:
+                    if season.value == season_value:
+                        self.current_season = season
+                        break
+            
+            # イベント有効化状態を復元
+            if 'events_enabled' in events_data:
+                self.disasters_disabled = not events_data['events_enabled']
+            
+            print(f"Event system restored: Season {self.current_season.value}, {len(self.disaster_history)} disasters in history")
+            
+        except Exception as e:
+            print(f"Error restoring event system: {e}")

@@ -335,3 +335,13 @@ class PopulationManager:
         for citizen in unemployed:
             if citizen.get_age_category(year) == CitizenAge.ADULT:
                 citizen.find_job(self.available_jobs)
+    
+    def _restore_citizen_from_dict(self, citizen_data: Dict) -> Optional[Citizen]:
+        """辞書から住民インスタンスを復元（ロード用）"""
+        try:
+            from models.citizen import Citizen
+            citizen = Citizen.from_dict(citizen_data)
+            return citizen
+        except Exception as e:
+            print(f"Error restoring citizen from dict: {e}")
+            return None

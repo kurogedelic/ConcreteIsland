@@ -21,6 +21,7 @@ from systems.animation_manager import animation_manager
 from systems.difficulty_manager import difficulty_manager
 from systems.game_completion import GameCompletionSystem
 from systems.developer_mode import developer_mode
+from systems.save_manager import save_manager
 
 
 class GameEngine:
@@ -59,6 +60,8 @@ class GameEngine:
         event_manager.register_listener("game_resumed", self._on_game_resumed)
         event_manager.register_listener("build_requested", self._on_build_requested)
         event_manager.register_listener("game_completed", self._on_game_completed)
+        event_manager.register_listener("developer_save_game", self._on_developer_save)
+        event_manager.register_listener("developer_load_game", self._on_developer_load)
     
     def _initialize_systems(self):
         """各システムを初期化"""
@@ -136,6 +139,9 @@ class GameEngine:
         # イベント処理
         event_manager.process_events()
         
+        # 自動セーブチェック
+        save_manager.auto_save(self)
+        
         # ゲーム完了チェック
         if self.time_manager.current_year >= GameConfig.END_YEAR and not self.game_completed:
             self._prepare_game_completion()
@@ -180,6 +186,13 @@ class GameEngine:
                 self.time_manager.set_speed(2.0)
             elif pyxel.btnp(pyxel.KEY_4):
                 self.time_manager.set_speed(5.0)
+        
+        # セーブ・ロード（F5: クイックセーブ、F9: クイックロード）
+        if pyxel.btnp(pyxel.KEY_F5):
+            save_manager.quick_save(self)
+        
+        if pyxel.btnp(pyxel.KEY_F9):
+            save_manager.quick_load(self)
         
         # カーソルシステムに入力を渡す
         self.cursor_system.handle_input()
@@ -386,6 +399,24 @@ class GameEngine:
         
         # ゲームを一時停止
         self.time_manager.pause()
+    
+    def _on_developer_save(self, data):
+        """開発者セーブイベントハンドラ"""
+        save_name = data.get("save_name", "dev_save")
+        success = save_manager.save_game(self, save_name)
+        if success:
+            developer_mode.log(f"セーブ完了: {save_name}")
+        else:
+            developer_mode.log(f"セーブ失敗: {save_manager.last_save_error}")
+    
+    def _on_developer_load(self, data):
+        """開発者ロードイベントハンドラ"""
+        filename = data.get("filename")
+        success = save_manager.load_game(filename, self)
+        if success:
+            developer_mode.log(f"ロード完了: {filename}")
+        else:
+            developer_mode.log(f"ロード失敗: {save_manager.last_load_error}")
     
     def shutdown(self):
         """ゲーム終了処理"""

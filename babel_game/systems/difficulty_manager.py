@@ -76,6 +76,17 @@ class DifficultyManager:
         """難易度変更イベントハンドラ"""
         print(f"Difficulty changed to: {data['difficulty'].value}")
         # 必要に応じて他のシステムに通知
+    
+    def _set_difficulty_from_save(self, difficulty_value: str):
+        """セーブデータから難易度を設定"""
+        try:
+            for difficulty in DifficultyLevel:
+                if difficulty.value == difficulty_value:
+                    self.current_difficulty = difficulty
+                    print(f"Difficulty restored: {difficulty.value}")
+                    break
+        except Exception as e:
+            print(f"Error setting difficulty from save: {e}")
 
 
 # シングルトンインスタンス

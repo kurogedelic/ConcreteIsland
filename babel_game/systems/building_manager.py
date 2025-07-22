@@ -393,3 +393,35 @@ class BuildingManager:
             'maintenance_cost': self.total_maintenance_cost,
             'unlocked_buildings': len(self.unlocked_buildings)
         }
+    
+    def _restore_building_from_dict(self, building_data: Dict, current_year: int) -> Optional[Building]:
+        """辞書から建物インスタンスを復元（ロード用）"""
+        try:
+            definition_id = building_data['definition_id']
+            if definition_id not in self.definitions:
+                print(f"Warning: Building definition not found: {definition_id}")
+                return None
+            
+            definition = self.definitions[definition_id]
+            building = Building(definition, building_data['x'], building_data['y'])
+            building.placed_year = building_data.get('placed_year', 1945)
+            building.condition = building_data.get('condition', 100)
+            building.active = building_data.get('active', True)
+            building.upgrade_level = building_data.get('upgrade_level', 0)
+            building.data = building_data.get('data', {})
+            
+            # 調整済みコストを設定
+            building.adjusted_cost = difficulty_manager.get_adjusted_cost(definition.cost, current_year)
+            building.adjusted_maintenance_cost = difficulty_manager.get_adjusted_cost(definition.maintenance_cost, current_year)
+            
+            # グリッド占有を更新
+            self._update_grid_occupation(building, add=True)
+            
+            # アニメーション設定
+            self._setup_building_animation(building)
+            
+            return building
+            
+        except Exception as e:
+            print(f"Error restoring building from dict: {e}")
+            return None
