@@ -4,10 +4,12 @@ Asset Management System
 """
 
 import os
+import time
 from typing import Dict, Optional, Tuple
 from PIL import Image
 import pyxel
 from config.game_config import GameConfig
+# fast_sprite_managerは後でインポート（循環回避）
 
 
 class AssetManager:
@@ -18,6 +20,10 @@ class AssetManager:
         self.images: Dict[str, Image.Image] = {}
         self.pyxel_colors: Dict[Tuple[int, int, int], int] = {}
         self._initialize_pyxel_palette()
+        
+        # 高速スプライトシステムとの統合
+        self.use_fast_sprites = True
+        self.fast_sprite_manager = None  # 後で初期化
     
     def _initialize_pyxel_palette(self):
         """Pyxel標準パレットを初期化"""
@@ -176,12 +182,37 @@ class AssetManager:
         return self.sprites.get(name)
     
     def has_sprite(self, name: str) -> bool:
-        """スプライトが存在するかチェック"""
+        """スプライトが存在するかチェック（高速システム優先）"""
+        if self.use_fast_sprites and self.fast_sprite_manager:
+            return self.fast_sprite_manager.has_sprite(name)
         return name in self.sprites
     
+    def _init_fast_sprite_manager(self):
+        """高速スプライト管理を初期化（循環インポート回避）"""
+        if self.fast_sprite_manager is None:
+            from systems.fast_sprite_manager import fast_sprite_manager
+            self.fast_sprite_manager = fast_sprite_manager
+            fast_sprite_manager.set_fallback_manager(self)
+    
     def load_all_assets(self):
-        """全アセットを読み込み"""
-        # アセットディレクトリパス
+        """全アセットを読み込み（高速スプライトシステム優先）"""
+        print("Loading assets...")
+        start_time = time.time()
+        
+        if self.use_fast_sprites:
+            # 高速スプライトシステムを初期化
+            self._init_fast_sprite_manager()
+            
+            # 高速スプライトシステムを試行
+            if self.fast_sprite_manager.load_sprites():
+                load_time = time.time() - start_time
+                print(f"Fast sprite system loaded in {load_time:.2f}s")
+                return
+            else:
+                print("Fast sprite system failed, falling back to legacy system")
+                self.use_fast_sprites = False
+        
+        # 従来システムでの読み込み
         base_dir = os.path.dirname(os.path.dirname(__file__))
         assets_dir = os.path.join(base_dir, "assets")
         
@@ -194,6 +225,9 @@ class AssetManager:
         ui_dir = os.path.join(assets_dir, "ui")
         if os.path.exists(ui_dir):
             self._load_png_sprites_from_dir(ui_dir, "icon_")
+        
+        load_time = time.time() - start_time
+        print(f"Legacy sprite system loaded in {load_time:.2f}s")
         
         # フォールバック用スプライト（PNGが見つからない場合）
         if len(self.sprites) == 0:
@@ -252,6 +286,27 @@ class AssetManager:
         
         self.sprites[name] = sprite_info
         print(f"Created sprite from data: {name} ({width}x{height})")
+    
+    def draw_sprite(self, name: str, x: int, y: int):
+        """スプライトを描画（高速システム優先）"""
+        if self.use_fast_sprites and self.fast_sprite_manager:
+            self.fast_sprite_manager.draw_sprite(name, x, y)
+            return
+        
+        # 従来システムでの描画
+        sprite_info = self.sprites.get(name)
+        if not sprite_info:
+            return
+        
+        pyxel_data = sprite_info['pyxel_data']
+        width = sprite_info['width']
+        height = sprite_info['height']
+        
+        for py in range(height):
+            for px in range(width):
+                color = pyxel_data[py][px]
+                if color != 14:  # 透過色でない場合
+                    pyxel.pset(x + px, y + py, color)
     
     def clear_all_assets(self):
         """全アセットをクリア"""
