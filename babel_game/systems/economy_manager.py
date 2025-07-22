@@ -47,6 +47,11 @@ class EconomyManager:
         event_manager.register_listener("month_changed", self._on_month_changed)
         event_manager.register_listener("citizen_immigrated", self._on_citizen_immigrated)
         event_manager.register_listener("citizen_emigrated", self._on_citizen_emigrated)
+        
+        # 開発者モードイベント
+        event_manager.register_listener("developer_infinite_money", self._on_developer_infinite_money)
+        event_manager.register_listener("developer_set_money", self._on_developer_set_money)
+        event_manager.register_listener("developer_add_money", self._on_developer_add_money)
     
     def _should_settle_monthly(self, current_year: int, current_month: int) -> bool:
         """月次精算を行うべきかチェック"""
@@ -283,6 +288,11 @@ class EconomyManager:
     
     def can_afford_building(self, building_definition, current_year: int) -> bool:
         """建物を建設できるかチェック（調整済みコスト使用）"""
+        # 開発者モード：無限資金チェック
+        from systems.developer_mode import developer_mode
+        if developer_mode.has_infinite_money():
+            return True
+            
         # 難易度と年代に応じた調整済み建設費用
         adjusted_cost = difficulty_manager.get_adjusted_cost(building_definition.cost, current_year)
         
@@ -435,3 +445,18 @@ class EconomyManager:
         """住民流出イベントハンドラ"""
         # 人口減少による経済損失
         self.economic_data.spend_resource(ResourceType.MONEY, 50)
+    
+    def _on_developer_infinite_money(self):
+        """開発者モード：無限資金イベントハンドラ"""
+        # 資金を最大値に設定
+        self.economic_data.money = 999999999
+    
+    def _on_developer_set_money(self, data):
+        """開発者モード：資金設定イベントハンドラ"""
+        amount = data.get('amount', 0)
+        self.economic_data.money = amount
+    
+    def _on_developer_add_money(self, data):
+        """開発者モード：資金追加イベントハンドラ"""
+        amount = data.get('amount', 0)
+        self.economic_data.add_resource(ResourceType.MONEY, amount)

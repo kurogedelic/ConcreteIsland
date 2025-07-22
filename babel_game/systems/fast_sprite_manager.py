@@ -19,7 +19,7 @@ from config.game_config import GameConfig
 class SpriteAtlas:
     """スプライトアトラス（スプライトシート）管理"""
     
-    def __init__(self, atlas_size: int = 1024):
+    def __init__(self, atlas_size: int = 2048):
         self.atlas_size = atlas_size
         self.atlas_data = [[0 for _ in range(atlas_size)] for _ in range(atlas_size)]
         self.sprite_map: Dict[str, Dict[str, Any]] = {}
@@ -41,37 +41,52 @@ class SpriteAtlas:
             self.color_cache[color] = i
     
     def add_sprite(self, name: str, image_data: List[List[int]], width: int, height: int) -> bool:
-        """スプライトをアトラスに追加"""
-        # アトラスに収まるかチェック
-        if self.current_x + width > self.atlas_size:
-            # 次の行に移動
-            self.current_x = 0
-            self.current_y += self.row_height
-            self.row_height = 0
+        """スプライトをアトラスに追加（改良されたパッキング）"""
+        # 空きスペースを探す
+        best_x, best_y = self._find_best_position(width, height)
         
-        if self.current_y + height > self.atlas_size:
-            print(f"Atlas full, cannot add sprite {name}")
+        if best_x == -1 or best_y == -1:
+            print(f"Atlas full, cannot add sprite {name} ({width}x{height})")
             return False
         
         # スプライトデータをアトラスにコピー
         for y in range(height):
             for x in range(width):
                 if y < len(image_data) and x < len(image_data[y]):
-                    self.atlas_data[self.current_y + y][self.current_x + x] = image_data[y][x]
+                    self.atlas_data[best_y + y][best_x + x] = image_data[y][x]
         
         # スプライト位置を記録
         self.sprite_map[name] = {
-            'x': self.current_x,
-            'y': self.current_y,
+            'x': best_x,
+            'y': best_y,
             'width': width,
             'height': height
         }
         
-        # 次のスプライト位置を更新
-        self.current_x += width
-        self.row_height = max(self.row_height, height)
-        
         return True
+    
+    def _find_best_position(self, width: int, height: int) -> Tuple[int, int]:
+        """最適な配置位置を探す（改良版パッキング）"""
+        # まず、現在の行に収まるかチェック
+        if (self.current_x + width <= self.atlas_size and 
+            self.current_y + height <= self.atlas_size):
+            x, y = self.current_x, self.current_y
+            self.current_x += width
+            self.row_height = max(self.row_height, height)
+            return x, y
+        
+        # 次の行に移動
+        if self.current_y + self.row_height + height <= self.atlas_size:
+            self.current_x = 0
+            self.current_y += self.row_height
+            self.row_height = height
+            
+            if width <= self.atlas_size:
+                x, y = self.current_x, self.current_y
+                self.current_x += width
+                return x, y
+        
+        return -1, -1  # 収まらない
     
     def get_sprite_info(self, name: str) -> Optional[Dict[str, Any]]:
         """スプライト情報を取得"""
@@ -85,6 +100,9 @@ class SpriteAtlas:
             'sprite_map': self.sprite_map,
             'palette': self.pyxel_palette
         }
+        
+        # ディレクトリを作成
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
         
         # JSON → gzip圧縮で保存
         json_data = json.dumps(atlas_data).encode('utf-8')
@@ -121,7 +139,7 @@ class FastSpriteManager:
     """高速スプライト管理クラス"""
     
     def __init__(self):
-        self.atlas = SpriteAtlas()
+        self.atlas = SpriteAtlas(2048)  # より大きなアトラス
         self.atlas_file = "babel_game/assets/sprites.atlas"
         self.atlas_loaded = False
         
@@ -133,14 +151,21 @@ class FastSpriteManager:
         """既存asset_managerをフォールバックとして設定"""
         self.fallback_manager = asset_manager
     
-    def build_atlas_from_assets(self, assets_dir: str = "babel_game/assets"):
+    def build_atlas_from_assets(self, assets_dir: str = None):
         """アセットディレクトリからアトラスを構築"""
-        print("Building sprite atlas...")
+        if assets_dir is None:
+            # 現在のファイルから相対パスで取得
+            current_file = Path(__file__)
+            assets_dir = current_file.parent.parent / "assets"
+        else:
+            assets_dir = Path(assets_dir)
+        
+        print(f"Building sprite atlas from: {assets_dir}")
         start_time = time.time()
         
         # タイルとUIアイコンを処理
-        tile_dir = Path(assets_dir) / "tiles"
-        ui_dir = Path(assets_dir) / "ui"
+        tile_dir = assets_dir / "tiles"
+        ui_dir = assets_dir / "ui"
         
         sprite_count = 0
         
@@ -265,6 +290,10 @@ class FastSpriteManager:
     
     def load_sprites(self) -> bool:
         """スプライトを読み込み（アトラス優先、フォールバック対応）"""
+        # アトラスファイルのパスを調整
+        current_file = Path(__file__)
+        self.atlas_file = str(current_file.parent.parent / "assets" / "sprites.atlas")
+        
         # アトラスが存在するかチェック
         if Path(self.atlas_file).exists():
             print("Loading sprite atlas...")

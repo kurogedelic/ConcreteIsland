@@ -20,6 +20,7 @@ from systems.font_manager import font_manager
 from systems.animation_manager import animation_manager
 from systems.difficulty_manager import difficulty_manager
 from systems.game_completion import GameCompletionSystem
+from systems.developer_mode import developer_mode
 
 
 class GameEngine:
@@ -82,8 +83,12 @@ class GameEngine:
         # 入力処理
         self._handle_input()
         
+        # 開発者モード更新
+        developer_mode.update()
+        
         # システム更新
-        self.time_manager.update()
+        if not developer_mode.time_frozen:
+            self.time_manager.update()
         self.cursor_system.update()
         self.grid_system.update()
         self.ui_manager.update(self.building_manager)
@@ -230,6 +235,9 @@ class GameEngine:
         
         # UIManager経由で描画
         self.ui_manager.draw(game_state, self.building_manager)
+        
+        # 開発者モードオーバーレイ
+        developer_mode.draw_dev_overlay(game_state)
     
     def _draw_buildings(self):
         """建物を描画（視界カリング対応）"""
