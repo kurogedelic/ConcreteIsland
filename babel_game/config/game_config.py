@@ -46,10 +46,10 @@ class GameConfig:
     COLOR_DIRT = 4      # 茶色
     COLOR_WATER = 12    # 青
     COLOR_ROAD = 6      # グレー
-    COLOR_UI_BG = 5     # 暗灰色
-    COLOR_UI_BORDER = 6 # 明灰色
-    COLOR_TEXT = 7      # 白
-    COLOR_HIGHLIGHT = 8 # 赤
+    COLOR_UI_BG = 5     # 暗灰色（UIパネル背景）
+    COLOR_UI_BORDER = 6 # 明灰色（UIパネル枠線）
+    COLOR_TEXT = 7      # 白（テキスト色）
+    COLOR_HIGHLIGHT = 10 # 黄色（ハイライト色）
     
     @classmethod
     def load_from_file(cls, filepath):
