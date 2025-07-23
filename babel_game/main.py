@@ -14,7 +14,7 @@ def main():
     engine = GameEngine()
     
     # Pyxelを初期化
-    pyxel.init(800, 600, title="戦後日本復興シミュレーション", quit_key=pyxel.KEY_Q)
+    pyxel.init(800, 600, title="ConcreteIsland", quit_key=pyxel.KEY_Q)
     
     # マウスカーソルを表示
     pyxel.mouse(visible=True)

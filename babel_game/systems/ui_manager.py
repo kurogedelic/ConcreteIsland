@@ -210,87 +210,87 @@ class UIManager:
         font_manager.draw_text(x + 5, y + 5, "都市情報", self.text_color)
         
         # 統計情報
-        stats_y = y + 20
+        stats_y = y + 25
         
-        # 基本統計
-        font_manager.draw_text(x + 5, stats_y, "基本データ:", self.text_color)
-        stats_y += 15
-        
-        money = game_state.get('money', 0)
-        font_manager.draw_text(x + 5, stats_y, f"予算: ¥{money:,}", self.text_color)
-        stats_y += 10
-        
-        population = game_state.get('population', 0)
-        font_manager.draw_text(x + 5, stats_y, f"人口: {population:,}人", self.text_color)
-        stats_y += 10
-        
-        happiness = game_state.get('happiness', 50)
-        font_manager.draw_text(x + 5, stats_y, f"満足度: {happiness}%", self.text_color)
+        # 基本統計セクション
+        self._draw_section_header(x, stats_y, width, "基本データ")
         stats_y += 20
         
-        # RCI需要
-        font_manager.draw_text(x + 5, stats_y, "需要状況:", self.text_color)
-        stats_y += 15
+        money = game_state.get('money', 0)
+        font_manager.draw_text(x + 10, stats_y, f"予算: ¥{money:,}", self.text_color)
+        stats_y += 14
+        
+        population = game_state.get('population', 0)
+        font_manager.draw_text(x + 10, stats_y, f"人口: {population:,}人", self.text_color)
+        stats_y += 14
+        
+        happiness = game_state.get('happiness', 50)
+        font_manager.draw_text(x + 10, stats_y, f"満足度: {happiness}%", self.text_color)
+        stats_y += 25
+        
+        # RCI需要セクション
+        self._draw_section_header(x, stats_y, width, "需要状況")
+        stats_y += 20
         
         r_demand = game_state.get('r_demand', 0)
         c_demand = game_state.get('c_demand', 0)
         i_demand = game_state.get('i_demand', 0)
         
-        font_manager.draw_text(x + 5, stats_y, f"住宅: {r_demand}", self.text_color)
-        stats_y += 10
-        font_manager.draw_text(x + 5, stats_y, f"商業: {c_demand}", self.text_color)
-        stats_y += 10
-        font_manager.draw_text(x + 5, stats_y, f"工業: {i_demand}", self.text_color)
-        stats_y += 20
+        font_manager.draw_text(x + 10, stats_y, f"住宅: {r_demand}", self.text_color)
+        stats_y += 14
+        font_manager.draw_text(x + 10, stats_y, f"商業: {c_demand}", self.text_color)
+        stats_y += 14
+        font_manager.draw_text(x + 10, stats_y, f"工業: {i_demand}", self.text_color)
+        stats_y += 25
         
-        # 電力・水道
-        font_manager.draw_text(x + 5, stats_y, "インフラ:", self.text_color)
-        stats_y += 15
+        # インフラセクション
+        self._draw_section_header(x, stats_y, width, "インフラ")
+        stats_y += 20
         
         power = game_state.get('power_usage', 0)
         power_cap = game_state.get('power_capacity', 0)
-        font_manager.draw_text(x + 5, stats_y, f"電力: {power}/{power_cap}", self.text_color)
-        stats_y += 10
+        font_manager.draw_text(x + 10, stats_y, f"電力: {power}/{power_cap}", self.text_color)
+        stats_y += 14
         
         water = game_state.get('water_usage', 0)
         water_cap = game_state.get('water_capacity', 0)
-        font_manager.draw_text(x + 5, stats_y, f"上水: {water}/{water_cap}", self.text_color)
+        font_manager.draw_text(x + 10, stats_y, f"上水: {water}/{water_cap}", self.text_color)
+        stats_y += 25
+        
+        # 経済情報セクション
+        self._draw_section_header(x, stats_y, width, "経済状況")
         stats_y += 20
         
-        # 経済情報
-        font_manager.draw_text(x + 5, stats_y, "経済状況:", self.text_color)
-        stats_y += 15
-        
         rice = game_state.get('rice', 0)
-        font_manager.draw_text(x + 5, stats_y, f"米: {rice}kg", self.text_color)
-        stats_y += 10
+        font_manager.draw_text(x + 10, stats_y, f"米: {rice}kg", self.text_color)
+        stats_y += 14
         
         iron = game_state.get('iron', 0)
-        font_manager.draw_text(x + 5, stats_y, f"鉄: {iron}kg", self.text_color)
-        stats_y += 10
+        font_manager.draw_text(x + 10, stats_y, f"鉄: {iron}kg", self.text_color)
+        stats_y += 14
         
         wood = game_state.get('wood', 0)
-        font_manager.draw_text(x + 5, stats_y, f"木材: {wood}kg", self.text_color)
-        stats_y += 10
+        font_manager.draw_text(x + 10, stats_y, f"木材: {wood}kg", self.text_color)
+        stats_y += 14
         
         coal = game_state.get('coal', 0)
-        font_manager.draw_text(x + 5, stats_y, f"石炭: {coal}kg", self.text_color)
-        stats_y += 15
+        font_manager.draw_text(x + 10, stats_y, f"石炭: {coal}kg", self.text_color)
+        stats_y += 20
         
         # 収支情報
         net_income = game_state.get('net_income', 0)
         income_color = self.text_color if net_income >= 0 else self.highlight_color
-        font_manager.draw_text(x + 5, stats_y, f"収支: ¥{net_income:+}", income_color)
-        stats_y += 10
+        font_manager.draw_text(x + 10, stats_y, f"収支: ¥{net_income:+}", income_color)
+        stats_y += 14
         
         # 市場状況
         market = game_state.get('market_condition', '安定')
-        font_manager.draw_text(x + 5, stats_y, f"市場: {market}", self.text_color)
-        stats_y += 15
+        font_manager.draw_text(x + 10, stats_y, f"市場: {market}", self.text_color)
+        stats_y += 25
         
-        # イベント情報
-        font_manager.draw_text(x + 5, stats_y, "イベント:", self.text_color)
-        stats_y += 15
+        # イベント情報セクション
+        self._draw_section_header(x, stats_y, width, "イベント")
+        stats_y += 20
         
         # 現在の季節
         current_season = game_state.get('current_season', 'spring')
@@ -298,21 +298,21 @@ class UIManager:
             'spring': '春', 'summer': '夏', 'autumn': '秋', 'winter': '冬'
         }
         season_jp = season_names.get(current_season, '春')
-        font_manager.draw_text(x + 5, stats_y, f"季節: {season_jp}", self.text_color)
-        stats_y += 10
+        font_manager.draw_text(x + 10, stats_y, f"季節: {season_jp}", self.text_color)
+        stats_y += 14
         
         # アクティブイベント
         active_events = game_state.get('active_events', [])
         if active_events:
-            font_manager.draw_text(x + 5, stats_y, "発生中:", self.text_color)
-            stats_y += 10
+            font_manager.draw_text(x + 10, stats_y, "発生中:", self.text_color)
+            stats_y += 14
             for event in active_events[:3]:  # 最大3つまで表示
                 event_name = event.name_jp[:8]  # 8文字に制限
                 event_color = self.highlight_color if event.severity >= 3 else self.text_color
-                font_manager.draw_text(x + 5, stats_y, f"・{event_name}", event_color)
-                stats_y += 10
+                font_manager.draw_text(x + 15, stats_y, f"・{event_name}", event_color)
+                stats_y += 14
         else:
-            font_manager.draw_text(x + 5, stats_y, "平穏", self.text_color)
+            font_manager.draw_text(x + 10, stats_y, "平穏", self.text_color)
     
     def draw_build_palette(self, building_manager=None):
         """アイコングリッド式建設パレットを描画"""
@@ -350,7 +350,7 @@ class UIManager:
                 color = self.text_color
             
             # カテゴリ番号と名前（短縮）
-            text = f"{i+1}:{category_data['name'][:2]}"
+            text = category_data['name'][:3]
             font_manager.draw_text(tab_x + 2, tab_y + 3, text, color)
         
         # 選択中カテゴリ名表示
@@ -813,3 +813,12 @@ class UIManager:
         # 注意事項
         y_offset += 30
         font_manager.draw_text(panel_x + 30, y_offset, "※現在の地形は失われます", 8)  # 警告色
+    
+    def _draw_section_header(self, x: int, y: int, width: int, title: str):
+        """情報パネルのセクションヘッダーを描画"""
+        # ヘッダー背景
+        header_width = width - 10
+        pyxel.rect(x + 5, y - 2, header_width, 16, self.border_color)
+        
+        # ヘッダーテキスト
+        font_manager.draw_text(x + 8, y + 2, title, 0)  # 黒文字でコントラスト
