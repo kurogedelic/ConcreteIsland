@@ -38,11 +38,22 @@ class GameEngine:
         self.technology_manager = TechnologyManager()
         self.event_system = EventSystem()
         self.game_completion = GameCompletionSystem()
-        
+
         # ゲーム状態
         self.running = True
         self.debug_mode = False
         self.game_completed = False
+
+        # FPS計測
+        import time
+        self.fps_start_time = time.time()
+        self.fps_frame_count = 0
+        self.current_fps = 60
+
+        # UI統計キャッシュ（パフォーマンス最適化）
+        self.cached_stats = {}
+        self.stats_cache_time = 0
+        self.stats_cache_duration = 0.5  # 0.5秒ごとに更新
         
         # イベントリスナーを登録
         self._register_event_listeners()
@@ -83,7 +94,18 @@ class GameEngine:
         """メインアップデートループ"""
         if not self.running:
             return
-        
+
+        # FPS計算（毎フレームカウント）
+        self.fps_frame_count += 1
+        import time
+        current_time = time.time()
+        elapsed = current_time - self.fps_start_time
+        if elapsed >= 1.0:  # 1秒ごとにFPS更新
+            self.current_fps = int(self.fps_frame_count / elapsed)
+            # リセットして次の計測へ
+            self.fps_start_time = current_time
+            self.fps_frame_count = 0
+
         # 入力処理
         self._handle_input()
         
@@ -160,8 +182,7 @@ class GameEngine:
         # 住民描画
         self._draw_citizens()
         
-        # カーソル描画
-        self.cursor_system.draw()
+        # カーソル描画は廃止（Pyxelのデフォルト矢印カーソルを使用）
         
         # UI描画
         self._draw_ui()
@@ -199,15 +220,30 @@ class GameEngine:
         self.cursor_system.handle_input()
     
     def _draw_ui(self):
-        """UI描画"""
-        # 統計情報を取得
-        pop_stats = self.population_manager.get_statistics()
-        building_stats = self.building_manager.get_statistics()
-        economy_stats = self.economy_manager.get_economic_summary()
-        tech_stats = self.technology_manager.get_current_era_info()
-        event_stats = self.event_system.get_event_summary()
-        
-        # ゲーム状態を準備
+        """UI描画（統計キャッシュで最適化）"""
+        import time
+
+        # 統計キャッシュの更新チェック
+        current_time = time.time()
+        if current_time - self.stats_cache_time > self.stats_cache_duration:
+            # キャッシュを更新
+            self.cached_stats = {
+                'pop_stats': self.population_manager.get_statistics(),
+                'building_stats': self.building_manager.get_statistics(),
+                'economy_stats': self.economy_manager.get_economic_summary(),
+                'tech_stats': self.technology_manager.get_current_era_info(),
+                'event_stats': self.event_system.get_event_summary(),
+            }
+            self.stats_cache_time = current_time
+
+        # キャッシュから統計を取得
+        pop_stats = self.cached_stats['pop_stats']
+        building_stats = self.cached_stats['building_stats']
+        economy_stats = self.cached_stats['economy_stats']
+        tech_stats = self.cached_stats['tech_stats']
+        event_stats = self.cached_stats['event_stats']
+
+        # ゲーム状態を準備（毎フレーム更新するものだけ）
         game_state = {
             'date': self.time_manager.get_date_string(),
             'year': self.time_manager.current_year,
@@ -220,6 +256,7 @@ class GameEngine:
             'cursor_pos': self.cursor_system.get_cursor_position(),
             'grid_pos': self.cursor_system.get_grid_position(),
             'selected_tool': self.cursor_system.get_selected_tool(),
+            'tile_info': self.cursor_system.get_tile_info(self.building_manager),
             'r_demand': max(0, 50 - int(pop_stats['available_housing'])),  # 住宅需要
             'c_demand': min(100, int(pop_stats['total_population'] / 10)),  # 商業需要
             'i_demand': min(100, int(pop_stats['unemployed_population'])),  # 工業需要
@@ -244,12 +281,13 @@ class GameEngine:
             # パフォーマンス統計（デバッグモード用）
             'culling_stats': self.grid_system.get_culling_stats() if self.debug_mode else {},
             'memory_stats': self.grid_system.get_memory_stats() if self.debug_mode else {},
-            'elapsed_time': pyxel.frame_count / 60.0  # FPS計算用
+            'fps': self.current_fps,
+            'elapsed_time': pyxel.frame_count / 60.0
         }
-        
+
         # UIManager経由で描画
         self.ui_manager.draw(game_state, self.building_manager)
-        
+
         # 開発者モードオーバーレイ
         developer_mode.draw_dev_overlay(game_state)
     
@@ -261,6 +299,10 @@ class GameEngine:
             lambda building: (building.x, building.y)
         )
         
+        # 等角投影の描画順序（奥から手前）でソート
+        # Y座標が小さい（奥）→大きい（手前）、同じY座標ならX座標が小さい→大きい
+        visible_buildings.sort(key=lambda building: (building.y, building.x))
+        
         for building in visible_buildings:
             screen_x, screen_y = self.grid_system.grid_to_screen(building.x, building.y)
             screen_x += self.grid_system.camera_x
@@ -271,13 +313,16 @@ class GameEngine:
             if animated_sprite and asset_manager.has_sprite(animated_sprite):
                 # アセットを1タイルに合わせて描画
                 asset_manager.draw_sprite(animated_sprite, 
-                                        screen_x - 16 + GameConfig.ASSET_OFFSET_X, 
-                                        screen_y - 16 + GameConfig.ASSET_OFFSET_Y)
+                                        screen_x + GameConfig.ASSET_OFFSET_X, 
+                                        screen_y + GameConfig.ASSET_OFFSET_Y)
             else:
                 # 通常のスプライト描画
-                asset_manager.draw_sprite(building.definition.sprite_name, 
-                                        screen_x - 16 + GameConfig.ASSET_OFFSET_X, 
-                                        screen_y - 16 + GameConfig.ASSET_OFFSET_Y)
+                sprite_name = building.definition.sprite_name
+                if not asset_manager.has_sprite(sprite_name):
+                    print(f"スプライト見つからず: {sprite_name} for {building.definition.name_jp}")
+                asset_manager.draw_sprite(sprite_name, 
+                                        screen_x + GameConfig.ASSET_OFFSET_X, 
+                                        screen_y + GameConfig.ASSET_OFFSET_Y)
     
     def _draw_citizens(self):
         """住民を描画（視界カリング対応）"""
@@ -303,9 +348,9 @@ class GameEngine:
         """初期人口を設定"""
         # いくつかの初期建物を配置
         initial_buildings = [
-            ("barrack_house", 5, 5),
-            ("barrack_house", 7, 5),
-            ("small_shop", 6, 7),
+            ("barracks", 5, 5),
+            ("barracks", 7, 5),
+            ("personal_shop", 6, 7),
             ("road", 5, 6),
             ("road", 6, 6),
             ("road", 7, 6)

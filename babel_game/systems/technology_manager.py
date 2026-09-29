@@ -85,7 +85,7 @@ class TechnologyManager:
                 era=TechnologyEra.POST_WAR_RECOVERY,
                 effects={
                     "building_cost_modifier": 0.8,  # 建設費20%安
-                    "unlock_buildings": ["barrack_house", "road", "small_shop", "small_factory"]
+                    "unlock_buildings": ["barracks", "road", "personal_shop", "small_factory"]
                 }
             ),
             TechnologyEvent(
@@ -286,7 +286,7 @@ class TechnologyManager:
                 era=TechnologyEra.POST_WAR_RECOVERY,
                 description_jp="戦争の傷跡から立ち上がり、基本的な都市インフラを整備する時期",
                 characteristic_buildings=[
-                    "barrack_house", "wooden_house", "small_shop", "small_factory", 
+                    "barracks", "wooden_house", "personal_shop", "small_factory", 
                     "police_box", "elementary_school", "road"
                 ],
                 economic_modifiers={

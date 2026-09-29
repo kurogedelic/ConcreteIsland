@@ -120,6 +120,7 @@ class DeveloperMode:
             self.no_resource_requirements = True
             self.unlock_all_buildings = True
             self.invincible_buildings = True
+            print("神モード有効化: 無限資金、建設制限解除")
             self.no_disasters = True
             
             self.log("神モード有効化：全制限解除")

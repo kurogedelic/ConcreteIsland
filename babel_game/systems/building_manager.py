@@ -59,11 +59,17 @@ class BuildingManager:
                 data = json.load(f)
             
             # 建物定義を読み込み
-            buildings_data = data.get('buildings', {})
-            for building_id, building_data in buildings_data.items():
+            buildings_data = data.get('buildings', [])
+            for building_data in buildings_data:
+                building_id = building_data['id']
+                building_name = building_data.get('name', 'Unknown')
+                print(f"Processing building: {building_id} ({building_name})")
                 building_data['id'] = building_id
                 # スプライト名を実際のファイル名にマッピング
-                building_data['sprite_name'] = get_sprite_name(building_id)
+                original_sprite = building_data.get('sprite_name', '')
+                mapped_sprite = get_sprite_name(building_id)
+                print(f"Building {building_id}: {original_sprite} -> {mapped_sprite}")
+                building_data['sprite_name'] = mapped_sprite
                 building_data['icon_name'] = get_icon_name(building_id)
                 definition = BuildingDefinition.from_dict(building_data)
                 self.definitions[building_id] = definition
@@ -87,7 +93,7 @@ class BuildingManager:
         
         # バラック住宅
         barrack = BuildingDefinition(
-            id="barrack_house",
+            id="barracks",
             name_jp="バラック住宅",
             name_en="Barrack House",
             category=BuildingCategory.RESIDENTIAL,
@@ -95,8 +101,8 @@ class BuildingManager:
             maintenance_cost=5,
             unlock_condition=BuildingUnlockCondition(year=1945, population=0),
             stats=BuildingStats(population_capacity=4, happiness_effect=-5),
-            sprite_name="building_house",
-            icon_name="building_house"
+            sprite_name="tile_barracks_house-1-1",
+            icon_name="barracks_icon"
         )
         
         # 小工場
@@ -115,16 +121,16 @@ class BuildingManager:
         
         # 個人商店
         shop = BuildingDefinition(
-            id="small_shop",
+            id="personal_shop",
             name_jp="個人商店",
-            name_en="Small Shop",
+            name_en="Personal Shop",
             category=BuildingCategory.COMMERCIAL,
             cost=300,
             maintenance_cost=10,
             unlock_condition=BuildingUnlockCondition(year=1945, population=5),
             stats=BuildingStats(jobs_provided=3, happiness_effect=2),
-            sprite_name="building_shop",
-            icon_name="building_shop"
+            sprite_name="tile_personal_shop-1-1",
+            icon_name="personal_shop_icon"
         )
         
         # 道路
@@ -142,9 +148,9 @@ class BuildingManager:
         )
         
         self.definitions = {
-            "barrack_house": barrack,
+            "barracks": barrack,
             "small_factory": factory,
-            "small_shop": shop,
+            "personal_shop": shop,
             "road": road
         }
         

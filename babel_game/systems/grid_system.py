@@ -39,7 +39,12 @@ class GridSystem:
         # 視界カリングシステム
         self.viewport_culling = ViewportCulling()
         
-        self._generate_test_terrain()
+        # 起動時に島を手続き生成（失敗時は従来のデフォルト地形）
+        try:
+            self.generate_procedural_terrain(MapType.ISLAND)
+        except Exception as e:
+            print(f"島の生成に失敗、デフォルト地形を使用: {e}")
+            self._generate_test_terrain()
         self._generate_coastlines()
         self._setup_terrain_animations()
     
@@ -95,48 +100,25 @@ class GridSystem:
             self.show_grid = not self.show_grid
     
     def _draw_terrain(self):
-        """地形を描画（視界カリング対応）"""
-        from systems.asset_manager import asset_manager
-        
+        """地形を描画（視界カリング対応・高速化）"""
         # 視界内のセルを取得
         visible_cells = self.viewport_culling.get_visible_cells(self.grid_width, self.grid_height)
-        
+
         # 描画順序を最適化（後ろから前へ）
         optimized_cells = self.viewport_culling.optimize_draw_order(visible_cells)
-        
+
         for x, y in optimized_cells:
             screen_x, screen_y = self.grid_to_screen(x, y)
-            
+
             # カメラオフセット適用
             screen_x += self.camera_x
             screen_y += self.camera_y
-            
+
             terrain_type = self.terrain[y][x]
-            
-            # 水タイルの場合はアニメーションを使用
-            if terrain_type == 2:  # 水タイル
-                # まずアニメーションスプライトを試す
-                animated_sprite = animation_manager.get_tile_sprite(x, y)
-                if animated_sprite and asset_manager.has_sprite(animated_sprite):
-                    # アセットを1タイルに合わせて描画
-                    asset_manager.draw_sprite(animated_sprite, 
-                                            screen_x - 16 + GameConfig.ASSET_OFFSET_X, 
-                                            screen_y - 16 + GameConfig.ASSET_OFFSET_Y)
-                else:
-                    # 海岸線スプライトを試す
-                    coastline_sprite = self.get_coastline_sprite(x, y)
-                    if asset_manager.has_sprite(coastline_sprite):
-                        asset_manager.draw_sprite(coastline_sprite, 
-                                                screen_x - 16 + GameConfig.ASSET_OFFSET_X, 
-                                                screen_y - 16 + GameConfig.ASSET_OFFSET_Y)
-                    else:
-                        # フォールバック：通常の水色で描画
-                        color = self._get_terrain_color(terrain_type)
-                        self._draw_isometric_cell(screen_x, screen_y, color)
-            else:
-                # 陸地タイルは通常通り描画
-                color = self._get_terrain_color(terrain_type)
-                self._draw_isometric_cell(screen_x, screen_y, color)
+
+            # パフォーマンスのため、色付き菱形のみ描画（PNGスプライトはスキップ）
+            color = self._get_terrain_color(terrain_type)
+            self._draw_isometric_cell(screen_x, screen_y, color)
     
     def _draw_grid_lines(self):
         """グリッド線を描画（視界カリング対応）"""
@@ -204,6 +186,10 @@ class GridSystem:
         screen_x -= self.camera_x
         screen_y -= self.camera_y
         
+        # 建物配置位置調整のためのオフセット
+        screen_x += 8
+        screen_y += -32
+        
         # ズーム逆変換
         screen_x /= self.zoom
         screen_y /= self.zoom
@@ -232,6 +218,19 @@ class GridSystem:
             3: GameConfig.COLOR_ROAD    # 道路
         }
         return terrain_colors.get(terrain_type, GameConfig.COLOR_GRASS)
+    
+    def _get_terrain_sprite_name(self, terrain_type):
+        """地形タイプに応じたスプライト名を取得"""
+        from config.sprite_mapping import BUILDING_SPRITE_MAPPING
+        terrain_sprites = {
+            0: BUILDING_SPRITE_MAPPING.get("terrain_grass", "tile_grass-1-1"),    # 草地
+            1: BUILDING_SPRITE_MAPPING.get("terrain_dirt", "tile_soil-1-1"),      # 土地
+            2: BUILDING_SPRITE_MAPPING.get("terrain_water", "tile_water-1-1"),    # 水
+            3: BUILDING_SPRITE_MAPPING.get("terrain_road", "tile_road-1-1"),      # 道路
+            4: BUILDING_SPRITE_MAPPING.get("terrain_waste", "tile_waste-1-1"),    # 荒廃地
+            5: BUILDING_SPRITE_MAPPING.get("terrain_sand", "tile_sand-1-1")       # 砂地
+        }
+        return terrain_sprites.get(terrain_type, "tile_grass-1-1")
     
     def generate_procedural_terrain(self, map_type: MapType = MapType.COASTAL, seed: int = None):
         """手続き的地形生成"""
@@ -270,7 +269,7 @@ class GridSystem:
                     self.terrain[y][x] = 0  # デフォルトは草地
         
         # 海岸線生成（既存システムを活用）
-        self.coastline_generator.generate_coastlines(self.terrain, self.grid_width, self.grid_height)
+        self._generate_coastlines()
         
         # 水タイルのアニメーション設定
         self._setup_water_animations()
@@ -289,28 +288,25 @@ class GridSystem:
                     animation_manager.set_tile_animation(x, y, "water")
     
     def _generate_test_terrain(self):
-        """テスト用地形を生成"""
-        # 簡単なパターンで地形を生成
-        for y in range(self.grid_height):
-            for x in range(self.grid_width):
-                # 川を作る
-                if abs(x - y) < 2:
-                    self.terrain[y][x] = 2  # 水
-                # 湖を作る
-                elif ((x - 10) ** 2 + (y - 10) ** 2) < 25:
-                    self.terrain[y][x] = 2  # 水
-                # 海岸線を作る
-                elif x < 3 or y < 3:
-                    self.terrain[y][x] = 2  # 水
-                # 道路を作る
-                elif x % 8 == 0 or y % 8 == 0:
-                    self.terrain[y][x] = 3  # 道路
-                # 建設可能地
-                elif (x + y) % 3 == 0:
-                    self.terrain[y][x] = 1  # 土地
-                else:
-                    self.terrain[y][x] = 0  # 草地
-    
+        """テスト地形を生成（デフォルト地形データを使用）"""
+        try:
+            from default_terrain import DEFAULT_TERRAIN
+            # デフォルト地形データをコピー
+            for y in range(min(self.grid_height, len(DEFAULT_TERRAIN))):
+                for x in range(min(self.grid_width, len(DEFAULT_TERRAIN[0]))):
+                    self.terrain[y][x] = DEFAULT_TERRAIN[y][x]
+            print("デフォルト地形データを読み込みました")
+        except ImportError:
+            print("デフォルト地形データが見つかりません。テスト地形を生成します。")
+            # フォールバック: 元のテスト地形生成
+            for y in range(self.grid_height):
+                for x in range(self.grid_width):
+                    if x == 0 or y == 0 or x == self.grid_width-1 or y == self.grid_height-1:
+                        self.terrain[y][x] = 2  # 水
+                    elif (x + y) % 4 == 0:
+                        self.terrain[y][x] = 1  # 土
+                    else:
+                        self.terrain[y][x] = 0  # 草
     def _generate_coastlines(self):
         """海岸線を生成"""
         self.coastline_sprites = self.coastline_generator.generate_coastline_for_area(

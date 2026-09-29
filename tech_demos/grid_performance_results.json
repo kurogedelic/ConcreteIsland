@@ -1,0 +1,192 @@
+{
+  "coordinate_performance": {
+    "grid_to_screen_time": 0.22161412239074707,
+    "screen_to_grid_time": 0.41629886627197266,
+    "conversions_per_second": 4512347.8107447205
+  },
+  "culling_results": [
+    {
+      "viewport": [
+        800,
+        600
+      ],
+      "camera": [
+        0,
+        0
+      ],
+      "total_tiles": 1000000,
+      "visible_tiles": 1312,
+      "culling_ratio": 0.001312,
+      "no_culling_time": 0.023598194122314453,
+      "culling_time": 0.14577007293701172,
+      "speedup": 0.16188641225768885
+    },
+    {
+      "viewport": [
+        800,
+        600
+      ],
+      "camera": [
+        5000,
+        3000
+      ],
+      "total_tiles": 1000000,
+      "visible_tiles": 2028,
+      "culling_ratio": 0.002028,
+      "no_culling_time": 0.022578954696655273,
+      "culling_time": 0.16335821151733398,
+      "speedup": 0.13821744549559675
+    },
+    {
+      "viewport": [
+        800,
+        600
+      ],
+      "camera": [
+        10000,
+        6000
+      ],
+      "total_tiles": 1000000,
+      "visible_tiles": 1989,
+      "culling_ratio": 0.001989,
+      "no_culling_time": 0.024537086486816406,
+      "culling_time": 0.155289888381958,
+      "speedup": 0.15800826919563418
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "camera": [
+        0,
+        0
+      ],
+      "total_tiles": 1000000,
+      "visible_tiles": 4627,
+      "culling_ratio": 0.004627,
+      "no_culling_time": 0.02274799346923828,
+      "culling_time": 0.14754891395568848,
+      "speedup": 0.1541725578276361
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "camera": [
+        5000,
+        3000
+      ],
+      "total_tiles": 1000000,
+      "visible_tiles": 7518,
+      "culling_ratio": 0.007518,
+      "no_culling_time": 0.022727012634277344,
+      "culling_time": 0.1539459228515625,
+      "speedup": 0.14762984438497373
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "camera": [
+        10000,
+        6000
+      ],
+      "total_tiles": 1000000,
+      "visible_tiles": 8349,
+      "culling_ratio": 0.008349,
+      "no_culling_time": 0.022710084915161133,
+      "culling_time": 0.15670180320739746,
+      "speedup": 0.14492548554214119
+    },
+    {
+      "viewport": [
+        400,
+        300
+      ],
+      "camera": [
+        0,
+        0
+      ],
+      "total_tiles": 1000000,
+      "visible_tiles": 350,
+      "culling_ratio": 0.00035,
+      "no_culling_time": 0.022836923599243164,
+      "culling_time": 0.1416759490966797,
+      "speedup": 0.16119125190161418
+    },
+    {
+      "viewport": [
+        400,
+        300
+      ],
+      "camera": [
+        5000,
+        3000
+      ],
+      "total_tiles": 1000000,
+      "visible_tiles": 553,
+      "culling_ratio": 0.000553,
+      "no_culling_time": 0.02255415916442871,
+      "culling_time": 0.15013670921325684,
+      "speedup": 0.15022414759599123
+    },
+    {
+      "viewport": [
+        400,
+        300
+      ],
+      "camera": [
+        10000,
+        6000
+      ],
+      "total_tiles": 1000000,
+      "visible_tiles": 533,
+      "culling_ratio": 0.000533,
+      "no_culling_time": 0.022674083709716797,
+      "culling_time": 0.15465712547302246,
+      "speedup": 0.1466087232668238
+    }
+  ],
+  "memory_results": [
+    {
+      "grid_size": 100,
+      "tile_count": 10000,
+      "memory_before": 29.71875,
+      "memory_after": 34.4375,
+      "memory_delta": 4.71875,
+      "bytes_per_tile": 494.7968
+    },
+    {
+      "grid_size": 500,
+      "tile_count": 250000,
+      "memory_before": 30.4375,
+      "memory_after": 211.3125,
+      "memory_delta": 180.875,
+      "bytes_per_tile": 758.644736
+    },
+    {
+      "grid_size": 1000,
+      "tile_count": 1000000,
+      "memory_before": 50.34375,
+      "memory_after": 784.390625,
+      "memory_delta": 734.046875,
+      "bytes_per_tile": 769.703936
+    },
+    {
+      "grid_size": 2000,
+      "tile_count": 4000000,
+      "memory_before": 119.390625,
+      "memory_after": 2374.3125,
+      "memory_delta": 2254.921875,
+      "bytes_per_tile": 591.11424
+    }
+  ],
+  "memory_usage": {
+    "initial": 12.8125,
+    "final": 108.328125,
+    "delta": 95.515625
+  }
+}

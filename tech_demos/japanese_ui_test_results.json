@@ -1,0 +1,643 @@
+{
+  "font_availability": [
+    {
+      "path": "umplus_j10r.bdf",
+      "size_kb": 993.20703125,
+      "exists": true
+    }
+  ],
+  "encoding_results": [
+    {
+      "category": "hiragana",
+      "text": "あいうえおかきくけこ",
+      "char_count": 10,
+      "utf8_bytes": 30,
+      "bytes_per_char": 3.0,
+      "encoding_success": true
+    },
+    {
+      "category": "katakana",
+      "text": "アイウエオカキクケコ",
+      "char_count": 10,
+      "utf8_bytes": 30,
+      "bytes_per_char": 3.0,
+      "encoding_success": true
+    },
+    {
+      "category": "kanji",
+      "text": "日本語文字表示テスト",
+      "char_count": 10,
+      "utf8_bytes": 30,
+      "bytes_per_char": 3.0,
+      "encoding_success": true
+    },
+    {
+      "category": "mixed",
+      "text": "戦後日本復興シミュレーション",
+      "char_count": 14,
+      "utf8_bytes": 42,
+      "bytes_per_char": 3.0,
+      "encoding_success": true
+    },
+    {
+      "category": "game_ui",
+      "ui_elements": [
+        {
+          "category": "ui_population",
+          "text": "人口",
+          "char_count": 2,
+          "utf8_bytes": 6,
+          "bytes_per_char": 3.0,
+          "encoding_success": true
+        },
+        {
+          "category": "ui_money",
+          "text": "資金",
+          "char_count": 2,
+          "utf8_bytes": 6,
+          "bytes_per_char": 3.0,
+          "encoding_success": true
+        },
+        {
+          "category": "ui_happiness",
+          "text": "幸福度",
+          "char_count": 3,
+          "utf8_bytes": 9,
+          "bytes_per_char": 3.0,
+          "encoding_success": true
+        },
+        {
+          "category": "ui_year",
+          "text": "年",
+          "char_count": 1,
+          "utf8_bytes": 3,
+          "bytes_per_char": 3.0,
+          "encoding_success": true
+        },
+        {
+          "category": "ui_barracks",
+          "text": "バラック住宅",
+          "char_count": 6,
+          "utf8_bytes": 18,
+          "bytes_per_char": 3.0,
+          "encoding_success": true
+        },
+        {
+          "category": "ui_wooden_house",
+          "text": "木造住宅",
+          "char_count": 4,
+          "utf8_bytes": 12,
+          "bytes_per_char": 3.0,
+          "encoding_success": true
+        },
+        {
+          "category": "ui_school",
+          "text": "学校",
+          "char_count": 2,
+          "utf8_bytes": 6,
+          "bytes_per_char": 3.0,
+          "encoding_success": true
+        },
+        {
+          "category": "ui_hospital",
+          "text": "病院",
+          "char_count": 2,
+          "utf8_bytes": 6,
+          "bytes_per_char": 3.0,
+          "encoding_success": true
+        },
+        {
+          "category": "ui_factory",
+          "text": "工場",
+          "char_count": 2,
+          "utf8_bytes": 6,
+          "bytes_per_char": 3.0,
+          "encoding_success": true
+        }
+      ]
+    }
+  ],
+  "layout_results": [
+    {
+      "element": "info_window",
+      "position": "bottom_left",
+      "calculated_xy": [
+        10,
+        440
+      ],
+      "rect": {
+        "x": 10,
+        "y": 440,
+        "width": 200,
+        "height": 150
+      },
+      "within_screen": true
+    },
+    {
+      "element": "build_palette",
+      "position": "bottom_right",
+      "calculated_xy": [
+        610,
+        390
+      ],
+      "rect": {
+        "x": 610,
+        "y": 390,
+        "width": 180,
+        "height": 200
+      },
+      "within_screen": true
+    },
+    {
+      "element": "status_bar",
+      "position": "top",
+      "calculated_xy": [
+        0,
+        0
+      ],
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 800,
+        "height": 30
+      },
+      "within_screen": true
+    }
+  ],
+  "ui_overlaps": [],
+  "rendering_results": [
+    {
+      "text": "人口: 1,234",
+      "text_width": 90,
+      "text_height": 10,
+      "position": [
+        55,
+        20
+      ],
+      "char_positions": [
+        {
+          "char": "人",
+          "x": 55,
+          "y": 20
+        },
+        {
+          "char": "口",
+          "x": 65,
+          "y": 20
+        },
+        {
+          "char": ":",
+          "x": 75,
+          "y": 20
+        },
+        {
+          "char": " ",
+          "x": 85,
+          "y": 20
+        },
+        {
+          "char": "1",
+          "x": 95,
+          "y": 20
+        },
+        {
+          "char": ",",
+          "x": 105,
+          "y": 20
+        },
+        {
+          "char": "2",
+          "x": 115,
+          "y": 20
+        },
+        {
+          "char": "3",
+          "x": 125,
+          "y": 20
+        },
+        {
+          "char": "4",
+          "x": 135,
+          "y": 20
+        }
+      ],
+      "fits_in_area": true
+    },
+    {
+      "text": "資金: ¥56,789",
+      "text_width": 110,
+      "text_height": 10,
+      "position": [
+        45,
+        20
+      ],
+      "char_positions": [
+        {
+          "char": "資",
+          "x": 45,
+          "y": 20
+        },
+        {
+          "char": "金",
+          "x": 55,
+          "y": 20
+        },
+        {
+          "char": ":",
+          "x": 65,
+          "y": 20
+        },
+        {
+          "char": " ",
+          "x": 75,
+          "y": 20
+        },
+        {
+          "char": "¥",
+          "x": 85,
+          "y": 20
+        },
+        {
+          "char": "5",
+          "x": 95,
+          "y": 20
+        },
+        {
+          "char": "6",
+          "x": 105,
+          "y": 20
+        },
+        {
+          "char": ",",
+          "x": 115,
+          "y": 20
+        },
+        {
+          "char": "7",
+          "x": 125,
+          "y": 20
+        },
+        {
+          "char": "8",
+          "x": 135,
+          "y": 20
+        },
+        {
+          "char": "9",
+          "x": 145,
+          "y": 20
+        }
+      ],
+      "fits_in_area": true
+    },
+    {
+      "text": "年度: 1955年",
+      "text_width": 90,
+      "text_height": 10,
+      "position": [
+        55,
+        20
+      ],
+      "char_positions": [
+        {
+          "char": "年",
+          "x": 55,
+          "y": 20
+        },
+        {
+          "char": "度",
+          "x": 65,
+          "y": 20
+        },
+        {
+          "char": ":",
+          "x": 75,
+          "y": 20
+        },
+        {
+          "char": " ",
+          "x": 85,
+          "y": 20
+        },
+        {
+          "char": "1",
+          "x": 95,
+          "y": 20
+        },
+        {
+          "char": "9",
+          "x": 105,
+          "y": 20
+        },
+        {
+          "char": "5",
+          "x": 115,
+          "y": 20
+        },
+        {
+          "char": "5",
+          "x": 125,
+          "y": 20
+        },
+        {
+          "char": "年",
+          "x": 135,
+          "y": 20
+        }
+      ],
+      "fits_in_area": true
+    },
+    {
+      "text": "バラック住宅",
+      "text_width": 60,
+      "text_height": 10,
+      "position": [
+        70,
+        20
+      ],
+      "char_positions": [
+        {
+          "char": "バ",
+          "x": 70,
+          "y": 20
+        },
+        {
+          "char": "ラ",
+          "x": 80,
+          "y": 20
+        },
+        {
+          "char": "ッ",
+          "x": 90,
+          "y": 20
+        },
+        {
+          "char": "ク",
+          "x": 100,
+          "y": 20
+        },
+        {
+          "char": "住",
+          "x": 110,
+          "y": 20
+        },
+        {
+          "char": "宅",
+          "x": 120,
+          "y": 20
+        }
+      ],
+      "fits_in_area": true
+    },
+    {
+      "text": "戦後復興期",
+      "text_width": 50,
+      "text_height": 10,
+      "position": [
+        75,
+        20
+      ],
+      "char_positions": [
+        {
+          "char": "戦",
+          "x": 75,
+          "y": 20
+        },
+        {
+          "char": "後",
+          "x": 85,
+          "y": 20
+        },
+        {
+          "char": "復",
+          "x": 95,
+          "y": 20
+        },
+        {
+          "char": "興",
+          "x": 105,
+          "y": 20
+        },
+        {
+          "char": "期",
+          "x": 115,
+          "y": 20
+        }
+      ],
+      "fits_in_area": true
+    }
+  ],
+  "responsiveness_results": [
+    {
+      "screen_size": [
+        640,
+        480
+      ],
+      "elements": [
+        {
+          "element": "info_panel",
+          "position": [
+            10,
+            320
+          ],
+          "size": [
+            200,
+            150
+          ],
+          "fits": true
+        },
+        {
+          "element": "build_palette",
+          "position": [
+            450,
+            270
+          ],
+          "size": [
+            180,
+            200
+          ],
+          "fits": true
+        },
+        {
+          "element": "status_bar",
+          "position": [
+            0,
+            10
+          ],
+          "size": [
+            640,
+            30
+          ],
+          "fits": true
+        }
+      ],
+      "available_area": {
+        "x": 650,
+        "y": 50,
+        "width": 0,
+        "height": 210
+      },
+      "all_elements_fit": true
+    },
+    {
+      "screen_size": [
+        800,
+        600
+      ],
+      "elements": [
+        {
+          "element": "info_panel",
+          "position": [
+            10,
+            440
+          ],
+          "size": [
+            200,
+            150
+          ],
+          "fits": true
+        },
+        {
+          "element": "build_palette",
+          "position": [
+            610,
+            390
+          ],
+          "size": [
+            180,
+            200
+          ],
+          "fits": true
+        },
+        {
+          "element": "status_bar",
+          "position": [
+            0,
+            10
+          ],
+          "size": [
+            800,
+            30
+          ],
+          "fits": true
+        }
+      ],
+      "available_area": {
+        "x": 810,
+        "y": 50,
+        "width": 0,
+        "height": 330
+      },
+      "all_elements_fit": true
+    },
+    {
+      "screen_size": [
+        1024,
+        768
+      ],
+      "elements": [
+        {
+          "element": "info_panel",
+          "position": [
+            10,
+            608
+          ],
+          "size": [
+            200,
+            150
+          ],
+          "fits": true
+        },
+        {
+          "element": "build_palette",
+          "position": [
+            834,
+            558
+          ],
+          "size": [
+            180,
+            200
+          ],
+          "fits": true
+        },
+        {
+          "element": "status_bar",
+          "position": [
+            0,
+            10
+          ],
+          "size": [
+            1024,
+            30
+          ],
+          "fits": true
+        }
+      ],
+      "available_area": {
+        "x": 1034,
+        "y": 50,
+        "width": 0,
+        "height": 498
+      },
+      "all_elements_fit": true
+    },
+    {
+      "screen_size": [
+        1280,
+        720
+      ],
+      "elements": [
+        {
+          "element": "info_panel",
+          "position": [
+            10,
+            560
+          ],
+          "size": [
+            200,
+            150
+          ],
+          "fits": true
+        },
+        {
+          "element": "build_palette",
+          "position": [
+            1090,
+            510
+          ],
+          "size": [
+            180,
+            200
+          ],
+          "fits": true
+        },
+        {
+          "element": "status_bar",
+          "position": [
+            0,
+            10
+          ],
+          "size": [
+            1280,
+            30
+          ],
+          "fits": true
+        }
+      ],
+      "available_area": {
+        "x": 1290,
+        "y": 50,
+        "width": 0,
+        "height": 450
+      },
+      "all_elements_fit": true
+    }
+  ],
+  "summary": {
+    "font_files_found": 1,
+    "encoding_success_rate": 1.0,
+    "layout_success_rate": 1.0,
+    "rendering_success_rate": 1.0,
+    "ui_overlaps_count": 0
+  }
+}

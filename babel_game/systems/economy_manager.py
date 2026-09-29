@@ -291,6 +291,7 @@ class EconomyManager:
         # 開発者モード：無限資金チェック
         from systems.developer_mode import developer_mode
         if developer_mode.has_infinite_money():
+            print(f"神モード有効: {building_definition.name_jp} を無制限で建設可能")
             return True
             
         # 難易度と年代に応じた調整済み建設費用
@@ -325,6 +326,13 @@ class EconomyManager:
     
     def purchase_building(self, building_definition, current_year: int) -> bool:
         """建物を購入（調整済みコスト使用）"""
+        # 開発者モード：無限資金チェック
+        from systems.developer_mode import developer_mode
+        if developer_mode.has_infinite_money():
+            print(f"神モード: {building_definition.name_jp} を無料で購入")
+            event_manager.emit_event("building_purchased", building_definition, {})
+            return True
+            
         adjusted_cost = difficulty_manager.get_adjusted_cost(building_definition.cost, current_year)
         costs = self._get_building_resource_costs(building_definition, adjusted_cost)
         
@@ -446,7 +454,7 @@ class EconomyManager:
         # 人口減少による経済損失
         self.economic_data.spend_resource(ResourceType.MONEY, 50)
     
-    def _on_developer_infinite_money(self):
+    def _on_developer_infinite_money(self, data):
         """開発者モード：無限資金イベントハンドラ"""
         # 資金を最大値に設定
         self.economic_data.money = 999999999

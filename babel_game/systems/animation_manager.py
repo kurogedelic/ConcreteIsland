@@ -73,55 +73,55 @@ class AnimationManager:
         """アニメーションを定義"""
         # 水のアニメーション
         water_frames = [
-            AnimationFrame("tile_water_1_1", 60),  # 60フレーム (1秒)
-            AnimationFrame("tile_water_1_2", 60),  # 60フレーム (1秒)
+            AnimationFrame("tile_water-1-1", 60),  # 60フレーム (1秒)
+            AnimationFrame("tile_water-1-2", 60),  # 60フレーム (1秒)
         ]
         self.animations["water"] = Animation("water", water_frames, loop=True)
         
         # 火のアニメーション（もし複数フレームがあれば）
         fire_frames = [
-            AnimationFrame("tile_fire_2_1", 30),
+            AnimationFrame("tile_fire-2-1", 30),
         ]
         self.animations["fire"] = Animation("fire", fire_frames, loop=True)
         
         # 煙のアニメーション（発電所など）
         smoke_frames = [
-            AnimationFrame("tile_thermal_power_1_1", 45),
-            AnimationFrame("tile_thermal_power_1_2", 45),
-            AnimationFrame("tile_thermal_power_1_3", 45),
-            AnimationFrame("tile_thermal_power_1_4", 45),
+            AnimationFrame("tile_thermal_power-1-1", 45),
+            AnimationFrame("tile_thermal_power-1-2", 45),
+            AnimationFrame("tile_thermal_power-1-3", 45),
+            AnimationFrame("tile_thermal_power-1-4", 45),
         ]
         self.animations["thermal_power"] = Animation("thermal_power", smoke_frames, loop=True)
         
         # 原子力発電所のアニメーション
         nuclear_frames = [
-            AnimationFrame("tile_nuclear_power_1_1", 90),
-            AnimationFrame("tile_nuclear_power_1_2", 90),
-            AnimationFrame("tile_nuclear_power_1_3", 90),
+            AnimationFrame("tile_nuclear_power-1-1", 90),
+            AnimationFrame("tile_nuclear_power-1-2", 90),
+            AnimationFrame("tile_nuclear_power-1-3", 90),
         ]
         self.animations["nuclear_power"] = Animation("nuclear_power", nuclear_frames, loop=True)
         
         # 石炭発電所のアニメーション
         coal_frames = [
-            AnimationFrame("tile_coal_power_plant_3_1", 40),
-            AnimationFrame("tile_coal_power_plant_3_2", 40),
-            AnimationFrame("tile_coal_power_plant_3_3", 40),
-            AnimationFrame("tile_coal_power_plant_3_4", 40),
+            AnimationFrame("tile_coal_power_plant-3-1", 40),
+            AnimationFrame("tile_coal_power_plant-3-2", 40),
+            AnimationFrame("tile_coal_power_plant-3-3", 40),
+            AnimationFrame("tile_coal_power_plant-3-4", 40),
         ]
         self.animations["coal_power"] = Animation("coal_power", coal_frames, loop=True)
         
         # 小工場のアニメーション
         factory_frames = [
-            AnimationFrame("tile_small_factory_1_1", 50),
-            AnimationFrame("tile_small_factory_1_2", 50),
+            AnimationFrame("tile_small_factory-1-1", 50),
+            AnimationFrame("tile_small_factory-1-2", 50),
         ]
         self.animations["small_factory"] = Animation("small_factory", factory_frames, loop=True)
         
         # 自動車工場のアニメーション
         auto_factory_frames = [
-            AnimationFrame("tile_auto_factory_1_1", 60),
-            AnimationFrame("tile_auto_factory_1_2", 60),
-            AnimationFrame("tile_auto_factory_1_3", 60),
+            AnimationFrame("tile_auto_factory-1-1", 60),
+            AnimationFrame("tile_auto_factory-1-2", 60),
+            AnimationFrame("tile_auto_factory-1-3", 60),
         ]
         self.animations["auto_factory"] = Animation("auto_factory", auto_factory_frames, loop=True)
         

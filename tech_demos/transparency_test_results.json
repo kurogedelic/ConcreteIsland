@@ -1,0 +1,58 @@
+{
+  "test_images": [
+    "tech_demos/test_images/simple_transparency.png",
+    "tech_demos/test_images/complex_transparency.png",
+    "tech_demos/test_images/isometric_building.png"
+  ],
+  "conversion_results": [
+    {
+      "file": "simple_transparency.png",
+      "size": [
+        64,
+        64
+      ],
+      "total_pixels": 4096,
+      "transparent_pixels": 3215,
+      "transparency_ratio": 0.784912109375,
+      "unique_colors": 3,
+      "non_transparent_colors": 2,
+      "has_magenta_transparency": true
+    },
+    {
+      "file": "complex_transparency.png",
+      "size": [
+        64,
+        64
+      ],
+      "total_pixels": 4096,
+      "transparent_pixels": 1927,
+      "transparency_ratio": 0.470458984375,
+      "unique_colors": 2,
+      "non_transparent_colors": 1,
+      "has_magenta_transparency": true
+    },
+    {
+      "file": "isometric_building.png",
+      "size": [
+        64,
+        64
+      ],
+      "total_pixels": 4096,
+      "transparent_pixels": 3353,
+      "transparency_ratio": 0.818603515625,
+      "unique_colors": 4,
+      "non_transparent_colors": 3,
+      "has_magenta_transparency": true
+    }
+  ],
+  "transparent_color": [
+    255,
+    0,
+    255
+  ],
+  "summary": {
+    "total_files": 3,
+    "files_with_transparency": 3,
+    "average_transparency_ratio": 0.6913248697916666
+  }
+}

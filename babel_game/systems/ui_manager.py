@@ -73,6 +73,10 @@ class UIManager:
                 self.selected_category = category_key
                 self.selected_building_index = 0
         
+        # デバッグ情報切り替え（F1キー）
+        if pyxel.btnp(pyxel.KEY_F1):
+            self.show_debug_info = not self.show_debug_info
+
         # 難易度変更（F5, F6, F7キー）
         if pyxel.btnp(pyxel.KEY_F5):
             difficulty_manager.set_difficulty(DifficultyLevel.EASY)
@@ -80,7 +84,7 @@ class UIManager:
             difficulty_manager.set_difficulty(DifficultyLevel.NORMAL)
         elif pyxel.btnp(pyxel.KEY_F7):
             difficulty_manager.set_difficulty(DifficultyLevel.HARD)
-        
+
         # ヘルプ画面切り替え（F2キー）
         if pyxel.btnp(pyxel.KEY_F2):
             self.show_help_screen = not self.show_help_screen
@@ -209,8 +213,32 @@ class UIManager:
         # タイトル
         font_manager.draw_text(x + 5, y + 5, "都市情報", self.text_color)
         
-        # 統計情報
+        # タイル情報セクション
         stats_y = y + 25
+        tile_info = game_state.get('tile_info')
+        if tile_info:
+            self._draw_section_header(x, stats_y, width, "タイル情報")
+            stats_y += 20
+            
+            pos_x, pos_y = tile_info['position']
+            font_manager.draw_text(x + 10, stats_y, f"位置: ({pos_x}, {pos_y})", self.text_color)
+            stats_y += 14
+            
+            terrain_name = tile_info['terrain_name']
+            font_manager.draw_text(x + 10, stats_y, f"地形: {terrain_name}", self.text_color)
+            stats_y += 14
+            
+            # 建物情報があれば表示
+            if tile_info.get('building'):
+                building = tile_info['building']
+                font_manager.draw_text(x + 10, stats_y, f"建物: {building}", self.text_color)
+                stats_y += 14
+            
+            stats_y += 10  # セクション間のスペース
+        else:
+            stats_y += 25  # タイル情報がない場合のスペース
+        
+        # 統計情報
         
         # 基本統計セクション
         self._draw_section_header(x, stats_y, width, "基本データ")
@@ -413,9 +441,9 @@ class UIManager:
         """デバッグ情報を描画"""
         debug_x = 10
         debug_y = 50
-        
+
         # FPS
-        fps = pyxel.frame_count // max(1, game_state.get('elapsed_time', 1))
+        fps = game_state.get('fps', 60)
         font_manager.draw_text(debug_x, debug_y, f"FPS: {fps}", self.text_color)
         debug_y += 10
         
@@ -482,9 +510,9 @@ class UIManager:
     def _get_building_icon(self, building_type: str) -> str:
         """建物タイプに応じたアイコンを取得"""
         icons = {
-            "barrack_house": "🏚️",
+            "barracks": "🏚️",
             "small_factory": "🏭", 
-            "small_shop": "🏪",
+            "personal_shop": "🏪",
             "road": "🛤️"
         }
         return icons.get(building_type, "🏗️")
@@ -492,9 +520,9 @@ class UIManager:
     def _get_building_price(self, building_type: str) -> int:
         """建物タイプに応じた価格を取得"""
         prices = {
-            "barrack_house": 100,
+            "barracks": 100,
             "small_factory": 500,
-            "small_shop": 300,
+            "personal_shop": 300,
             "road": 10
         }
         return prices.get(building_type, 1000)

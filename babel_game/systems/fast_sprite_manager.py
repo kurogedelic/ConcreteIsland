@@ -311,16 +311,31 @@ class FastSpriteManager:
     
     def has_sprite(self, sprite_name: str) -> bool:
         """スプライトが存在するかチェック"""
+        # スプライトマッピングを適用
+        from config.sprite_mapping import BUILDING_SPRITE_MAPPING
+        mapped_name = BUILDING_SPRITE_MAPPING.get(sprite_name, sprite_name)
+        
         if self.use_fast_sprites and self.atlas_loaded:
-            return sprite_name in self.atlas.sprite_map
+            # まず元の名前でチェック、なければマップ後の名前でチェック
+            if sprite_name in self.atlas.sprite_map:
+                return True
+            return mapped_name in self.atlas.sprite_map
         elif self.fallback_manager:
             return self.fallback_manager.has_sprite(sprite_name)
         return False
     
     def draw_sprite(self, sprite_name: str, x: int, y: int):
         """スプライトを描画"""
+        # スプライトマッピングを適用
+        from config.sprite_mapping import BUILDING_SPRITE_MAPPING
+        mapped_name = BUILDING_SPRITE_MAPPING.get(sprite_name, sprite_name)
+        
         if self.use_fast_sprites and self.atlas_loaded:
-            self._draw_from_atlas(sprite_name, x, y)
+            # まず元の名前で試す、なければマップ後の名前で試す
+            if sprite_name in self.atlas.sprite_map:
+                self._draw_from_atlas(sprite_name, x, y)
+            else:
+                self._draw_from_atlas(mapped_name, x, y)
         elif self.fallback_manager:
             # 既存システムにフォールバック
             self.fallback_manager.draw_sprite(sprite_name, x, y)
@@ -345,8 +360,16 @@ class FastSpriteManager:
     
     def get_sprite_info(self, sprite_name: str) -> Optional[Dict[str, Any]]:
         """スプライト情報を取得"""
+        # スプライトマッピングを適用
+        from config.sprite_mapping import BUILDING_SPRITE_MAPPING
+        mapped_name = BUILDING_SPRITE_MAPPING.get(sprite_name, sprite_name)
+        
         if self.use_fast_sprites and self.atlas_loaded:
-            return self.atlas.get_sprite_info(sprite_name)
+            # まず元の名前で試す、なければマップ後の名前で試す
+            info = self.atlas.get_sprite_info(sprite_name)
+            if info is None:
+                info = self.atlas.get_sprite_info(mapped_name)
+            return info
         return None
     
     def is_atlas_outdated(self, assets_dir: str = "babel_game/assets") -> bool:

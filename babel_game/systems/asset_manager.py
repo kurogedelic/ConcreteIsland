@@ -113,10 +113,22 @@ class AssetManager:
     
     def draw_sprite(self, name: str, x: int, y: int, scale: float = 1.0) -> bool:
         """スプライトを描画"""
-        if name not in self.sprites:
+        # スプライトマッピングを適用
+        from config.sprite_mapping import BUILDING_SPRITE_MAPPING
+        mapped_name = BUILDING_SPRITE_MAPPING.get(name, name)
+        
+        # まず元の名前で試す
+        sprite_name = name if name in self.sprites else mapped_name
+        
+        if sprite_name not in self.sprites:
+            # 高速スプライトシステムを試す
+            if self.use_fast_sprites and self.fast_sprite_manager:
+                # 高速スプライトマネージャーに描画を委譲
+                self.fast_sprite_manager.draw_sprite(name, x, y)
+                return True
             return False
         
-        sprite = self.sprites[name]
+        sprite = self.sprites[sprite_name]
         pyxel_data = sprite['pyxel_data']
         width = sprite['width']
         height = sprite['height']
@@ -183,9 +195,16 @@ class AssetManager:
     
     def has_sprite(self, name: str) -> bool:
         """スプライトが存在するかチェック（高速システム優先）"""
+        # スプライトマッピングを適用
+        from config.sprite_mapping import BUILDING_SPRITE_MAPPING
+        mapped_name = BUILDING_SPRITE_MAPPING.get(name, name)
+        
         if self.use_fast_sprites and self.fast_sprite_manager:
-            return self.fast_sprite_manager.has_sprite(name)
-        return name in self.sprites
+            # まず元の名前でチェック、なければマップ後の名前でチェック
+            if self.fast_sprite_manager.has_sprite(name):
+                return True
+            return self.fast_sprite_manager.has_sprite(mapped_name)
+        return name in self.sprites or mapped_name in self.sprites
     
     def _init_fast_sprite_manager(self):
         """高速スプライト管理を初期化（循環インポート回避）"""

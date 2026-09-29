@@ -1,0 +1,558 @@
+{
+  "game_info": {
+    "theme": "戦後日本復興シミュレーション",
+    "period": "1945-1970",
+    "start_year": 1945,
+    "end_year": 1970,
+    "description": "戦後の焼け野原から始まり、高度成長期までの日本の復興を体験するシミュレーションゲーム"
+  },
+  "categories": {
+    "residential": {
+      "name": "住宅",
+      "icon": "house",
+      "color": [34, 139, 34],
+      "description": "住民が住むための建物"
+    },
+    "commercial": {
+      "name": "商業",
+      "icon": "shop",
+      "color": [30, 144, 255],
+      "description": "商業活動を行う建物"
+    },
+    "industrial": {
+      "name": "工業",
+      "icon": "factory",
+      "color": [255, 165, 0],
+      "description": "工業生産を行う建物"
+    },
+    "civic": {
+      "name": "公共",
+      "icon": "government",
+      "color": [128, 0, 128],
+      "description": "行政・公共サービスの建物"
+    },
+    "infra": {
+      "name": "インフラ",
+      "icon": "infrastructure",
+      "color": [169, 169, 169],
+      "description": "道路・鉄道・電力などのインフラ"
+    },
+    "recreation": {
+      "name": "娯楽",
+      "icon": "entertainment",
+      "color": [255, 20, 147],
+      "description": "娯楽・レジャー施設"
+    },
+    "special": {
+      "name": "特殊",
+      "icon": "special",
+      "color": [255, 215, 0],
+      "description": "特殊建物・ランドマーク"
+    }
+  },
+  "buildings": [
+    {
+      "id": "road",
+      "name": "道路",
+      "category": "infra",
+      "size": {"width": 1, "height": 1},
+      "cost": 10,
+      "maintenance": 1,
+      "unlock_conditions": {
+        "year": 1945,
+        "population": 0,
+        "prerequisites": []
+      },
+      "sprite_name": "road_straight_ew",
+      "icon_name": "road_icon",
+      "animation_frames": 1,
+      "description": "人々の移動を可能にする基本的な道路",
+      "effects": {
+        "transport": 1,
+        "population_capacity": 0
+      }
+    },
+    {
+      "id": "rail",
+      "name": "鉄道",
+      "category": "infra",
+      "size": {"width": 1, "height": 1},
+      "cost": 25,
+      "maintenance": 2,
+      "unlock_conditions": {
+        "year": 1950,
+        "population": 200,
+        "prerequisites": ["road"]
+      },
+      "sprite_name": "rail_straight_ew",
+      "icon_name": "rail_icon",
+      "animation_frames": 1,
+      "description": "高速大量輸送を可能にする鉄道線路",
+      "effects": {
+        "transport": 3,
+        "population_capacity": 0
+      }
+    },
+    {
+      "id": "barracks",
+      "name": "バラック住宅",
+      "category": "residential",
+      "size": {"width": 1, "height": 1},
+      "cost": 20,
+      "maintenance": 2,
+      "unlock_conditions": {
+        "year": 1945,
+        "population": 0,
+        "prerequisites": []
+      },
+      "sprite_name": "barracks_house",
+      "icon_name": "barracks_icon",
+      "animation_frames": 1,
+      "description": "終戦直後の急造住宅。最低限の住居を提供する",
+      "effects": {
+        "population_capacity": 2,
+        "happiness": -1
+      }
+    },
+    {
+      "id": "wooden_house",
+      "name": "木造平屋",
+      "category": "residential",
+      "size": {"width": 2, "height": 2},
+      "cost": 100,
+      "maintenance": 5,
+      "unlock_conditions": {
+        "year": 1947,
+        "population": 50,
+        "prerequisites": []
+      },
+      "sprite_name": "wooden_house",
+      "icon_name": "wooden_house_icon",
+      "animation_frames": 1,
+      "description": "戦後復興期の標準的な木造住宅",
+      "effects": {
+        "population_capacity": 4,
+        "happiness": 1
+      }
+    },
+    {
+      "id": "personal_shop",
+      "name": "個人商店",
+      "category": "commercial",
+      "size": {"width": 1, "height": 1},
+      "cost": 50,
+      "maintenance": 3,
+      "unlock_conditions": {
+        "year": 1946,
+        "population": 20,
+        "prerequisites": []
+      },
+      "sprite_name": "personal_shop",
+      "icon_name": "personal_shop_icon",
+      "animation_frames": 1,
+      "description": "家族経営の小さな商店",
+      "effects": {
+        "jobs": 2,
+        "commerce": 1,
+        "tax_income": 5
+      }
+    },
+    {
+      "id": "small_factory",
+      "name": "小工場",
+      "category": "industrial",
+      "size": {"width": 2, "height": 2},
+      "cost": 200,
+      "maintenance": 10,
+      "unlock_conditions": {
+        "year": 1948,
+        "population": 100,
+        "prerequisites": []
+      },
+      "sprite_name": "small_factory",
+      "icon_name": "small_factory_icon",
+      "animation_frames": 2,
+      "description": "復興期の小規模工場",
+      "effects": {
+        "jobs": 8,
+        "industry": 2,
+        "tax_income": 15,
+        "pollution": 1
+      }
+    },
+    {
+      "id": "koban",
+      "name": "派出所",
+      "category": "civic",
+      "size": {"width": 1, "height": 1},
+      "cost": 80,
+      "maintenance": 8,
+      "unlock_conditions": {
+        "year": 1947,
+        "population": 100,
+        "prerequisites": []
+      },
+      "sprite_name": "koban",
+      "icon_name": "koban_icon",
+      "animation_frames": 1,
+      "description": "地域の治安を守る派出所",
+      "effects": {
+        "safety": 2,
+        "happiness": 1
+      }
+    },
+    {
+      "id": "fire_station",
+      "name": "消防分団",
+      "category": "civic",
+      "size": {"width": 1, "height": 1},
+      "cost": 100,
+      "maintenance": 10,
+      "unlock_conditions": {
+        "year": 1948,
+        "population": 200,
+        "prerequisites": []
+      },
+      "sprite_name": "fire_station",
+      "icon_name": "fire_station_icon",
+      "animation_frames": 1,
+      "description": "火災から街を守る消防分団",
+      "effects": {
+        "fire_safety": 3,
+        "happiness": 1
+      }
+    },
+    {
+      "id": "wooden_school",
+      "name": "小学校（木造）",
+      "category": "civic",
+      "size": {"width": 2, "height": 2},
+      "cost": 300,
+      "maintenance": 20,
+      "unlock_conditions": {
+        "year": 1947,
+        "population": 150,
+        "prerequisites": []
+      },
+      "sprite_name": "wooden_school",
+      "icon_name": "wooden_school_icon",
+      "animation_frames": 1,
+      "description": "戦後復興期の木造校舎",
+      "effects": {
+        "education": 2,
+        "happiness": 2,
+        "student_capacity": 100
+      }
+    },
+    {
+      "id": "municipal_housing",
+      "name": "市営団地",
+      "category": "residential",
+      "size": {"width": 2, "height": 2},
+      "cost": 400,
+      "maintenance": 15,
+      "unlock_conditions": {
+        "year": 1950,
+        "population": 300,
+        "prerequisites": ["wooden_school"]
+      },
+      "sprite_name": "municipal_housing",
+      "icon_name": "municipal_housing_icon",
+      "animation_frames": 1,
+      "description": "戦後復興期の公営住宅",
+      "effects": {
+        "population_capacity": 8,
+        "happiness": 0
+      }
+    },
+    {
+      "id": "shopping_street",
+      "name": "商店街",
+      "category": "commercial",
+      "size": {"width": 2, "height": 2},
+      "cost": 250,
+      "maintenance": 12,
+      "unlock_conditions": {
+        "year": 1950,
+        "population": 400,
+        "prerequisites": ["personal_shop"]
+      },
+      "sprite_name": "shopping_street",
+      "icon_name": "shopping_street_icon",
+      "animation_frames": 1,
+      "description": "商店が集まった商店街",
+      "effects": {
+        "jobs": 10,
+        "commerce": 3,
+        "tax_income": 20,
+        "happiness": 1
+      }
+    },
+    {
+      "id": "train_station_wooden",
+      "name": "国鉄駅（木造）",
+      "category": "infra",
+      "size": {"width": 2, "height": 2},
+      "cost": 500,
+      "maintenance": 25,
+      "unlock_conditions": {
+        "year": 1950,
+        "population": 500,
+        "prerequisites": []
+      },
+      "sprite_name": "train_station_wooden",
+      "icon_name": "train_station_wooden_icon",
+      "animation_frames": 1,
+      "description": "戦後復興期の木造駅舎",
+      "effects": {
+        "transport": 5,
+        "commerce": 2,
+        "jobs": 5
+      }
+    },
+    {
+      "id": "concrete_school",
+      "name": "小学校（鉄筋）",
+      "category": "civic",
+      "size": {"width": 2, "height": 2},
+      "cost": 600,
+      "maintenance": 30,
+      "unlock_conditions": {
+        "year": 1955,
+        "population": 800,
+        "prerequisites": ["wooden_school"]
+      },
+      "sprite_name": "concrete_school",
+      "icon_name": "concrete_school_icon",
+      "animation_frames": 1,
+      "description": "近代的な鉄筋コンクリート校舎",
+      "effects": {
+        "education": 4,
+        "happiness": 3,
+        "student_capacity": 200
+      }
+    },
+    {
+      "id": "high_rise_housing",
+      "name": "高層団地",
+      "category": "residential",
+      "size": {"width": 3, "height": 3},
+      "cost": 800,
+      "maintenance": 25,
+      "unlock_conditions": {
+        "year": 1955,
+        "population": 1000,
+        "prerequisites": ["municipal_housing"]
+      },
+      "sprite_name": "high_rise_housing",
+      "icon_name": "high_rise_housing_icon",
+      "animation_frames": 1,
+      "description": "高度成長期の高層団地",
+      "effects": {
+        "population_capacity": 20,
+        "happiness": 1
+      }
+    },
+    {
+      "id": "auto_factory",
+      "name": "自動車工場",
+      "category": "industrial",
+      "size": {"width": 3, "height": 3},
+      "cost": 1500,
+      "maintenance": 50,
+      "unlock_conditions": {
+        "year": 1955,
+        "population": 1500,
+        "prerequisites": ["small_factory"]
+      },
+      "sprite_name": "auto_factory",
+      "icon_name": "auto_factory_icon",
+      "animation_frames": 3,
+      "description": "高度成長期の自動車工場",
+      "effects": {
+        "jobs": 30,
+        "industry": 5,
+        "tax_income": 50,
+        "pollution": 3
+      }
+    },
+    {
+      "id": "department_store",
+      "name": "百貨店",
+      "category": "commercial",
+      "size": {"width": 3, "height": 3},
+      "cost": 1000,
+      "maintenance": 40,
+      "unlock_conditions": {
+        "year": 1958,
+        "population": 2000,
+        "prerequisites": ["shopping_street"]
+      },
+      "sprite_name": "department_store",
+      "icon_name": "department_store_icon",
+      "animation_frames": 1,
+      "description": "高度成長期の百貨店",
+      "effects": {
+        "jobs": 25,
+        "commerce": 8,
+        "tax_income": 60,
+        "happiness": 2
+      }
+    },
+    {
+      "id": "thermal_power",
+      "name": "火力発電所",
+      "category": "infra",
+      "size": {"width": 4, "height": 4},
+      "cost": 2000,
+      "maintenance": 80,
+      "unlock_conditions": {
+        "year": 1955,
+        "population": 2000,
+        "prerequisites": []
+      },
+      "sprite_name": "thermal_power",
+      "icon_name": "thermal_power_icon",
+      "animation_frames": 4,
+      "description": "大規模火力発電所",
+      "effects": {
+        "power_generation": 100,
+        "jobs": 20,
+        "pollution": 5
+      }
+    },
+    {
+      "id": "sento",
+      "name": "銭湯",
+      "category": "recreation",
+      "size": {"width": 1, "height": 1},
+      "cost": 80,
+      "maintenance": 8,
+      "unlock_conditions": {
+        "year": 1948,
+        "population": 200,
+        "prerequisites": []
+      },
+      "sprite_name": "sento",
+      "icon_name": "sento_icon",
+      "animation_frames": 1,
+      "description": "地域住民の憩いの場",
+      "effects": {
+        "happiness": 2,
+        "health": 1
+      }
+    },
+    {
+      "id": "cinema",
+      "name": "映画館",
+      "category": "recreation",
+      "size": {"width": 2, "height": 2},
+      "cost": 300,
+      "maintenance": 20,
+      "unlock_conditions": {
+        "year": 1952,
+        "population": 800,
+        "prerequisites": []
+      },
+      "sprite_name": "cinema",
+      "icon_name": "cinema_icon",
+      "animation_frames": 1,
+      "description": "娯楽の中心地",
+      "effects": {
+        "happiness": 3,
+        "jobs": 8,
+        "commerce": 2
+      }
+    },
+    {
+      "id": "hospital",
+      "name": "総合病院",
+      "category": "civic",
+      "size": {"width": 3, "height": 3},
+      "cost": 1200,
+      "maintenance": 60,
+      "unlock_conditions": {
+        "year": 1955,
+        "population": 1500,
+        "prerequisites": []
+      },
+      "sprite_name": "hospital",
+      "icon_name": "hospital_icon",
+      "animation_frames": 1,
+      "description": "地域医療の中心",
+      "effects": {
+        "health": 5,
+        "jobs": 30,
+        "happiness": 2
+      }
+    },
+    {
+      "id": "nuclear_power",
+      "name": "原子力発電所",
+      "category": "special",
+      "size": {"width": 4, "height": 4},
+      "cost": 5000,
+      "maintenance": 150,
+      "unlock_conditions": {
+        "year": 1965,
+        "population": 5000,
+        "prerequisites": ["thermal_power"]
+      },
+      "sprite_name": "nuclear_power",
+      "icon_name": "nuclear_power_icon",
+      "animation_frames": 3,
+      "description": "原子力の平和利用",
+      "effects": {
+        "power_generation": 300,
+        "jobs": 50,
+        "science": 5,
+        "pollution": 2
+      }
+    },
+    {
+      "id": "tv_tower",
+      "name": "テレビ塔",
+      "category": "special",
+      "size": {"width": 2, "height": 2},
+      "cost": 3000,
+      "maintenance": 100,
+      "unlock_conditions": {
+        "year": 1960,
+        "population": 3000,
+        "prerequisites": []
+      },
+      "sprite_name": "tv_tower",
+      "icon_name": "tv_tower_icon",
+      "animation_frames": 1,
+      "description": "テレビ時代の象徴",
+      "effects": {
+        "communication": 10,
+        "happiness": 3,
+        "tourism": 2
+      }
+    },
+    {
+      "id": "airport",
+      "name": "空港",
+      "category": "special",
+      "size": {"width": 4, "height": 4},
+      "cost": 8000,
+      "maintenance": 200,
+      "unlock_conditions": {
+        "year": 1968,
+        "population": 10000,
+        "prerequisites": []
+      },
+      "sprite_name": "airport",
+      "icon_name": "airport_icon",
+      "animation_frames": 1,
+      "description": "国際化の象徴",
+      "effects": {
+        "transport": 20,
+        "jobs": 100,
+        "tourism": 10,
+        "tax_income": 100
+      }
+    }
+  ]
+}
